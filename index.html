@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Engineer Life V3 · 電腦手機響應式版</title>
+<title>Engineer Life V4 · 學歷職系公司開局版</title>
 <meta name="theme-color" content="#02070a">
 <style>
 :root{--bg:#02070a;--panel:#061014;--panel2:#08181d;--line:#123b43;--green:#00ffa0;--cyan:#00d9ff;--yellow:#ffd166;--red:#ff5d73;--text:#d9f7ee;--muted:#6f9b92}
@@ -305,10 +305,83 @@ img,canvas,svg{max-width:100%}
 }
 </style>
 
+
+<style id="v4-job-company-css">
+.profileAvatar{
+  width:82px;height:82px;flex:none;border:1px solid #2b5960;border-radius:5px;overflow:hidden;background:#0b1822
+}
+.profileAvatar img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+.profileGrid{display:flex;gap:12px;align-items:center}
+.jobCard{
+  border:1px solid #285660;background:#06181d;padding:12px;border-radius:5px
+}
+.jobCard b{display:block;color:#fff;font-size:15px}
+.jobCard span{display:block;color:#7fa69c;font-size:11px;line-height:1.6;margin-top:4px}
+.jobCard .bonus{color:var(--yellow)!important}
+.prologueCard{
+  border-color:#2c6670!important;
+  background:
+    radial-gradient(circle at 90% 10%,rgba(0,217,255,.07),transparent 30%),
+    linear-gradient(180deg,#081a20,#061116)!important
+}
+.prologueCard .quote{
+  border-left:2px solid var(--yellow);padding:9px 11px;margin:10px 0 14px;background:#0b171a;color:#e7d797;font-size:12px;line-height:1.7
+}
+.prologueCard p{font-size:13px;line-height:1.9;color:#bdd7cf}
+.prologueCard strong{color:var(--green)}
+.prologueMeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.prologueMeta span{border:1px solid #28545b;padding:4px 6px;border-radius:3px;font-size:9px;color:#9cc6bb}
+@media(max-width:700px){
+  .profileAvatar{width:68px;height:68px}
+  .profileGrid{align-items:flex-start}
+  .prologueCard p{font-size:12.5px}
+}
+</style>
+
 </head>
 <body>
 <div id="app"></div>
 <script>
+
+const ENGINEER_AVATAR="data:image/webp;base64,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";
+const JOBS=[
+ {id:"rd",name:"研發 RD",minTier:"A",salary:82000,bonus:{tech:8,stress:4,health:-3},desc:"每天跟 spec、實驗、bug 和客戶需求搏鬥。"},
+ {id:"process",name:"製程工程師",minTier:"B",salary:76000,bonus:{obedience:7,stress:5,health:-4},desc:"輪班、產線、異常處理，電話響起來就代表今晚可能不用睡。"},
+ {id:"it",name:"IT / MIS",minTier:"C",salary:65000,bonus:{tech:4,comm:5,slack:5},desc:"全公司電腦壞掉都先找你，印表機卡紙也算你的。"},
+ {id:"qa",name:"測試 / QA",minTier:"B",salary:70000,bonus:{stress:6,tech:4,obedience:3},desc:"你不是在找 bug，就是在證明 bug 不是你造成的。"},
+ {id:"ai",name:"AI 軟體工程師",minTier:"S",salary:98000,bonus:{tech:12,comm:3,health:-2},desc:"每天都有人問你 AI 會不會取代人類，你只想知道 model 什麼時候跑完。"},
+ {id:"fae",name:"FAE 應用工程師",minTier:"B",salary:78000,bonus:{comm:10,stress:5,tech:3},desc:"客戶說有問題，你就得先假設真的是你家的問題。"},
+ {id:"hw",name:"硬體工程師",minTier:"A",salary:80000,bonus:{tech:9,stress:4,health:-2},desc:"板子不亮、訊號亂飄、示波器是你最親密的同事。"}
+];
+const COMPANIES=[
+ {name:"台機電",jobs:["rd","process","qa","it","hw"],salaryMul:1.18,note:"晶圓帝國：錢多、制度硬、肝的使用率也高。"},
+ {name:"輝噠",jobs:["ai","rd","hw","it"],salaryMul:1.35,note:"AI 神殿：薪水很香，面試和績效也會讓你懷疑人生。"},
+ {name:"聯發顆",jobs:["rd","ai","hw","qa","fae"],salaryMul:1.22,note:"IC 江湖：會議很多、專案很多、股票話題更多。"},
+ {name:"廣大達",jobs:["rd","it","qa","hw"],salaryMul:1.05,note:"ODM 大本營：產品多、客戶多、臨時需求更多。"},
+ {name:"鴻嗨",jobs:["process","it","qa","fae","hw"],salaryMul:1.08,note:"工業巨獸：流程龐大，會議室永遠有人。"},
+ {name:"合座社",jobs:["rd","qa","process","it"],salaryMul:1.00,note:"外商感滿滿：英文 mail 很多，主管可能比你更會講幹話。"},
+ {name:"日月光光",jobs:["process","qa","it","fae"],salaryMul:.98,note:"封測宇宙：輪班和異常處理是日常語言。"}
+];
+const TIER_SCORE={S:4,A:3,B:2,C:1,D:0};
+function jobFitsEdu(job,edu){
+  return TIER_SCORE[edu.tier] >= TIER_SCORE[job.minTier];
+}
+function randomJobForEdu(edu){
+  let pool=JOBS.filter(j=>jobFitsEdu(j,edu));
+  if(!pool.length)pool=JOBS.filter(j=>j.minTier==="C"||j.minTier==="B");
+  return deep(rand(pool));
+}
+function randomCompanyForJob(job){
+  let pool=COMPANIES.filter(c=>c.jobs.includes(job.id));
+  return deep(rand(pool));
+}
+function applyJobBonus(job,stats){
+  Object.entries(job.bonus).forEach(([k,v])=>stats[k]=clamp(stats[k]+v));
+}
+function jobCompanyCard(job,company){
+  return `<div class="jobCard"><b>${company.name}｜${job.name}</b><span>${job.desc}</span><span class="bonus">${company.note}</span></div>`;
+}
+
 const NAMES={
  normal:["陳柏宇","林冠廷","李承翰","吳家豪","張哲維","王俊凱","黃子維","劉宇辰","蔡宗翰","許家銘","鄭宇翔","楊凱翔"],
  easter:[
@@ -533,48 +606,62 @@ function clamp(n){return Math.max(0,Math.min(100,n))}
 function rand(a){return a[Math.floor(Math.random()*a.length)]}
 function deep(o){return JSON.parse(JSON.stringify(o))}
 function ovr(s){return Math.round((s.tech*1.35+s.stress+s.health*.8+s.comm*.75+s.obedience*.55+s.slack*.35+s.luck*.5)/6.3)}
-function save(){localStorage.setItem("engineerLifeV2",JSON.stringify(state))}
-function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV2")||"null")}catch(e){return null}}
+function save(){localStorage.setItem("engineerLifeV4",JSON.stringify(state))}
+function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV4")||"null")}catch(e){return null}}
 function specialNameData(name){return NAMES.easter.find(x=>x.name===name)}
 function randomName(){return Math.random()<.18?rand(NAMES.easter).name:rand(NAMES.normal)}
 function randomEdu(){return deep(rand(EDUCATION))}
 function applyNameBonus(name,stats){const d=specialNameData(name);if(!d)return {stats,note:"一般工程師：沒有隱藏加成"};Object.entries(d.bonus).forEach(([k,v])=>stats[k]=clamp(stats[k]+v));return {stats,note:d.note}}
 function statLabel(k){return ({health:"健康度",obedience:"奴性",stress:"抗壓性",tech:"技術力",comm:"溝通力",slack:"摸魚力",luck:"運氣"})[k]}
 function eduCard(e){return `<div class="educationCard"><b>${e.school} ${e.dept}・${e.degree}</b><span>學歷等級 ${e.tier}｜初始技術 ${e.base.tech}｜抗壓 ${e.base.stress}</span><span class="bonus">${e.tier==="S"?"名校光環：技術／抗壓明顯加成":e.tier==="A"?"研究所實戰派：能力均衡":e.tier==="B"?"中段起跑：靠職場表現翻身":e.tier==="C"?"普通起跑：後續成長更重要":"低起點模式：真正的 hard mode"}</span></div>`}
-function previewStats(e,name){let stats=deep(e.base);let b=applyNameBonus(name,stats);return `<div class="startStats">${Object.keys(stats).map(k=>`<div class="startStat"><b>${stats[k]}</b><span>${statLabel(k)}</span></div>`).join("")}</div><p class="note" style="margin-top:10px;color:var(--yellow)">${b.note}</p>`}
-function startScreen(){let edu=randomEdu(),name=randomName();window._draftEdu=edu;window._draftName=name;return `<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · 竹科賣肝人生</div></div><div class="startWrap"><div class="hero"><div class="ascii">╔══════════════════════════════════════╗
+function previewStats(e,name){
+  let stats=deep(e.base);
+  let b=applyNameBonus(name,stats);
+  return `<div class="startStats">${Object.keys(stats).map(k=>`<div class="startStat"><b>${stats[k]}</b><span>${statLabel(k)}</span></div>`).join("")}</div><p class="note" style="margin-top:10px;color:var(--yellow)">${b.note}</p>`;
+}
+function previewStatsV4(e,name,job){
+  let stats=deep(e.base);
+  let b=applyNameBonus(name,stats);
+  applyJobBonus(job,stats);
+  return `<div class="startStats">${Object.keys(stats).map(k=>`<div class="startStat"><b>${stats[k]}</b><span>${statLabel(k)}</span></div>`).join("")}</div><p class="note" style="margin-top:10px;color:var(--yellow)">${b.note}｜${job.name} 職系加成已套用</p>`;
+}
+function rerollJobCompany(){
+  const e=window._draftEdu||randomEdu();
+  const j=randomJobForEdu(e),c=randomCompanyForJob(j);
+  window._draftJob=j;window._draftCompany=c;
+  document.getElementById("jobCompanyCard").innerHTML=jobCompanyCard(j,c);
+  document.getElementById("previewStats").innerHTML=previewStatsV4(e,document.getElementById("nameInput").value.trim()||window._draftName,j);
+}
+function startScreen(){
+  let edu=randomEdu(),name=randomName(),job=randomJobForEdu(edu),company=randomCompanyForJob(job);
+  window._draftEdu=edu;window._draftName=name;window._draftJob=job;window._draftCompany=company;
+  return `<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · 竹科賣肝人生</div></div>
+  <div class="startWrap">
+    <div class="hero">
+      <div class="ascii">╔══════════════════════════════════════╗
 ║ Engineer Life · 新竹科學園區人生模擬器 ║
-╚══════════════════════════════════════╝</div><h1>從畢業那天開始，人生正式進入 debug 模式。</h1><p>你花了好幾年念完大學和碩士，以為終於能用專業換一份體面的生活。直到第一天踏進竹科，你才發現真正的必修課叫做：加班、救火、主管訊息、績效、跳槽、股票、健康檢查，以及如何在凌晨兩點還能假裝自己很有精神。</p><p>這不是一條保證升主管、年薪三百萬的人生。你有可能一路進大廠、被獵頭挖角，也可能專案翻車、健康爆掉、被主管陰、轉職失敗，最後提早離開科技業。每四回合，你的人生就會走進下一個重要階段。</p></div><div class="setupGrid"><div class="box"><div class="boxTitle">[1] 角色建立 <span>NAME / EDU</span></div><div class="field"><label>工程師姓名</label><div class="inline"><input id="nameInput" value="${name}"><button class="diceBtn" onclick="rerollName()">🎲 骰名字</button></div></div><div class="field"><label>學歷</label><div id="eduCard">${eduCard(edu)}</div></div><button class="diceBtn" style="width:100%;min-height:42px" onclick="rerollEdu()">🎲 重新骰學歷</button><p class="note">隨機姓名有小機率出現特殊諧音人物，會自帶隱藏能力加成。學歷會直接影響初始能力值；台清交成通常技術／抗壓較高，私立學校則需要靠後續職涯慢慢補強。</p></div><div class="box"><div class="boxTitle">[2] 初始能力預覽 <span>BASE STATS</span></div><div id="previewStats">${previewStats(edu,name)}</div><button class="primary" style="margin-top:14px" onclick="startGame()">ENTER 竹科人生 →</button></div></div></div>`}
-function rerollName(){const n=randomName();window._draftName=n;document.getElementById("nameInput").value=n;document.getElementById("previewStats").innerHTML=previewStats(window._draftEdu,n)}
-function rerollEdu(){const e=randomEdu();window._draftEdu=e;document.getElementById("eduCard").innerHTML=eduCard(e);document.getElementById("previewStats").innerHTML=previewStats(e,document.getElementById("nameInput").value.trim()||window._draftName)}
-function startGame(){const name=document.getElementById("nameInput").value.trim()||randomName();const edu=window._draftEdu||randomEdu();let stats=deep(edu.base);const b=applyNameBonus(name,stats);state={name,edu,stats,phase:0,turn:0,year:2026,age:24,salary:68000,jobTitle:"竹科新人",skillPoints:0,ended:false,ending:null,current:null,result:null,logs:[{when:"2026・24歲",text:`${edu.school} ${edu.dept} ${edu.degree}畢業，進入竹科。${b.note}`}],used:[]};save();render()}
-function phase(){return PHASES[state.phase]}
-function timeline(){return PHASES.map((p,i)=>`<div class="node ${i<state.phase?"done":i===state.phase?"current":""}"><i class="dot"></i><div><b>${p.year}｜${p.name}</b><br><span>${p.story}</span></div></div>`).join("")}
-function statBlock(){return Object.keys(state.stats).map(k=>`<div class="stat"><div class="statHead"><span>${statLabel(k)}</span><b>${state.stats[k]}</b></div><div class="bar"><i style="width:${state.stats[k]}%"></i></div></div>`).join("")}
-function drawEvent(){
-  if(state.current||state.result||state.ended)return;
-  ensureV2State();
-  const specials=specialTriggerCandidates();
-
-  if(specials.length){
-    const healthCritical=specials.filter(e=>e.conditions?.some(([label])=>label.includes("健康度")));
-    const pool=healthCritical.length?healthCritical:specials;
-    if(Math.random()<0.72){
-      const ev=deep(rand(pool));
-      state.usedSpecial.push(ev.id);
-      ev.isSpecial=true;
-      state.current=ev;
-      save();render();return;
-    }
-  }
-
-  let pool=EVENTS[phase().id]||EVENTS.entry;
-  let candidates=pool.filter(e=>!state.used.includes(e.title));
-  if(!candidates.length){state.used=[];candidates=pool}
-  const ev=deep(rand(candidates));
-  state.used.push(ev.title);
-  state.current=ev;
-  save();render();
+╚══════════════════════════════════════╝</div>
+      <h1>從畢業那天開始，人生正式進入 debug 模式。</h1>
+      <p>先骰出你的學歷、公司與職系。不同學歷會影響能進入哪些職位；不同職位與公司則會直接改變初始薪資、能力值和後續事件。</p>
+    </div>
+    <div class="setupGrid">
+      <div class="box">
+        <div class="boxTitle">[1] 角色建立 <span>NAME / EDU / JOB</span></div>
+        <div class="field"><label>工程師姓名</label><div class="inline"><input id="nameInput" value="${name}"><button class="diceBtn" onclick="rerollName()">🎲 骰名字</button></div></div>
+        <div class="field"><label>學歷</label><div id="eduCard">${eduCard(edu)}</div></div>
+        <button class="diceBtn" style="width:100%;min-height:42px;margin-bottom:10px" onclick="rerollEdu()">🎲 重新骰學歷</button>
+        <div class="field"><label>公司＋工作職系</label><div id="jobCompanyCard">${jobCompanyCard(job,company)}</div></div>
+        <button class="diceBtn" style="width:100%;min-height:42px" onclick="rerollJobCompany()">🎲 重新骰公司與職系</button>
+        <p class="note">職位會配合學歷。S/A 級學歷比較容易進 RD、AI、硬體等高技術職；C/D 級則較容易從 IT、製程、QA 等路線開始，但後面仍可以靠事件翻身。</p>
+      </div>
+      <div class="box">
+        <div class="boxTitle">[2] 初始能力預覽 <span>BASE STATS</span></div>
+        <div style="display:flex;gap:12px;margin-bottom:12px;align-items:center"><div class="profileAvatar"><img src="${ENGINEER_AVATAR}"></div><div><b style="font-size:18px">${name}</b><div style="font-size:11px;color:var(--muted);margin-top:5px">${company.name}｜${job.name}</div></div></div>
+        <div id="previewStats">${previewStatsV4(edu,name,job)}</div>
+        <button class="primary" style="margin-top:14px" onclick="startGame()">ENTER 竹科人生 →</button>
+      </div>
+    </div>
+  </div>`;
 }
 function choose(i){
   const ev=state.current;
@@ -629,8 +716,33 @@ function choose(i){
   save();render();
 }
 function nextTurn(){state.result=null;state.turn++;if(state.turn>=phase().turns){state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`完成 ${phase().name} 四回合，進入重大劇情：${phase().story}`});if(state.phase<PHASES.length-1){state.phase++;state.turn=0;state.year=phase().year;state.age=phase().age;state.salary+=12000;state.jobTitle=phase().name;state.used=[]}else{state.turn=phase().turns}}save();render()}
-function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV2");state=null;render()}}
+function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV4");state=null;render()}}
+
+function engineerPrologue(){
+  const pua = state.edu.tier==="S"
+    ?"你從小就被灌輸『都念到這裡了，不進大公司要幹嘛？』，連過年親戚都已經預設你會年薪三百萬。"
+    : state.edu.tier==="A"||state.edu.tier==="B"
+    ?"爸媽一路跟你說『至少要進竹科，不然隔壁阿姨會問』，你也不知道為什麼人生 KPI 還包含親戚的面子。"
+    :"你從小聽最多的一句話就是『學歷普通沒關係，進大公司一樣能翻身』，於是全家把竹科當成你的人生贖罪券。";
+  return `<div class="box event prologueCard">
+    <div class="kicker">SYSTEM BOOT · ENGINEER LIFE</div>
+    <div class="profileGrid" style="margin:10px 0 12px">
+      <div class="profileAvatar"><img src="${ENGINEER_AVATAR}"></div>
+      <div><h2 style="margin:0 0 4px">${state.name}</h2><div style="font-size:11px;color:var(--muted)">${state.edu.school} ${state.edu.dept} ${state.edu.degree}<br>${state.company.name}｜${state.job.name}</div></div>
+    </div>
+    <div class="quote">「讀那麼多書，就是要賺大錢啊，不然你表哥在科技業你要怎麼跟人家比？」——某位每年過年都會問薪水的親戚</div>
+    <p>終於，你從 <strong>${state.edu.school} ${state.edu.dept} ${state.edu.degree}</strong> 畢業了。論文口試、研究室熬夜、老師一句『再改一下』的陰影還沒完全散去，你已經穿著人生第一套自認像樣的襯衫，拿著識別證站在竹科門口。</p>
+    <p>${pua}</p>
+    <p>而現在，你真的進了 <strong>${state.company.name}</strong>，職稱是 <strong>${state.job.name}</strong>。你滿懷熱血地想著：我要學技術、升職、賺大錢、買房、讓爸媽在親戚群組裡抬頭挺胸。</p>
+    <p>結果第一天早上，你先花了二十分鐘搞不懂門禁，接著被拉進一場完全聽不懂縮寫的會議，中午同事開始比較學歷，下午主管丟來一份 Excel，晚上 9:38 你手機亮起——<strong>「有空幫我看一下嗎？」</strong></p>
+    <p>歡迎來到竹科。你以為自己是來改變世界的，世界目前比較想先看看你的肝能撐多久。</p>
+    <div class="prologueMeta"><span>${state.company.name}</span><span>${state.job.name}</span><span>起薪 ${state.salary.toLocaleString()}</span><span>${state.edu.tier} 級學歷</span></div>
+    <button class="primary" style="margin-top:14px" onclick="state.prologue=false;save();render()">開始我的賣肝人生 →</button>
+  </div>`;
+}
+
 function centerCard(){
+  if(state.prologue)return engineerPrologue();
   if(state.ended && state.ending){
     return `<div class="box event endingBox"><div class="endingBadge">CAREER ENDING</div><div class="kicker">工程師人生結局</div><h2>${state.ending.title}</h2><p>${state.ending.text}</p></div>
     <button class="primary" style="border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重新開始工程師人生</button>`;
@@ -644,7 +756,7 @@ function centerCard(){
   }
   return `<div class="box event"><div class="kicker">CURRENT CHAPTER · ${phase().name}</div><h2>${state.turn+1} / ${phase().turns} 回合</h2><p>${phase().desc}</p><p class="note" style="margin-top:9px">條件式特殊事件會根據能力值觸發。健康度是最重要的生存能力；健康過低時，加班、實驗、輪班等事件會變得更危險。</p></div><button class="primary" onclick="drawEvent()">開始本回合事件 →</button>`;
 }
-function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}ensureV2State();app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><h1>${state.name}</h1><div class="sub">${state.edu.school} ${state.edu.dept}<br>${state.edu.degree}｜${state.edu.tier} 級學歷</div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">竹科</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.skillPoints}</b><span>特殊事件點數</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V1</span></div><p class="note">V2 已加入條件式特殊事件：特殊事件不會隨機硬塞，而是必須達到對應能力門檻才可能觸發。整體結果約 20% 偏好、80% 偏壞；健康度是最重要的生存能力，過低時可能出現長期住院、被資遣或極端職涯終止結局。成功處理特殊事件可以獲得特殊事件點數。</p></div></aside></div>`}
+function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}ensureV2State();app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><div class="profileGrid"><div class="profileAvatar"><img src="${ENGINEER_AVATAR}"></div><div><h1>${state.name}</h1><div class="sub">${state.edu.school} ${state.edu.dept}<br>${state.edu.degree}｜${state.company?.name||"竹科"}｜${state.job?.name||state.jobTitle}</div></div></div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">${state.company?.name||"竹科"}</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.skillPoints}</b><span>特殊事件點數</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V1</span></div><p class="note">V2 已加入條件式特殊事件：特殊事件不會隨機硬塞，而是必須達到對應能力門檻才可能觸發。整體結果約 20% 偏好、80% 偏壞；健康度是最重要的生存能力，過低時可能出現長期住院、被資遣或極端職涯終止結局。成功處理特殊事件可以獲得特殊事件點數。</p></div></aside></div>`}
 render();
 </script>
 
@@ -654,8 +766,7 @@ function v3MobileProfile(){
   return `<div class="mobileProfile">
     <div class="box identity">
       <div class="boxTitle">USER PROFILE <span>${state.edu.tier} 級學歷</span></div>
-      <h1>${state.name}</h1>
-      <div class="sub">${state.edu.school} ${state.edu.dept}<br>${state.edu.degree}｜${state.jobTitle}</div>
+      <div class="profileGrid"><div class="profileAvatar"><img src="${ENGINEER_AVATAR}"></div><div><h1>${state.name}</h1><div class="sub">${state.edu.school} ${state.edu.dept}<br>${state.edu.degree}｜${state.company?.name||"竹科"}｜${state.job?.name||state.jobTitle}</div></div></div>
       <div class="tagrow">
         <span class="tag gold">${state.jobTitle}</span>
         <span class="tag">竹科</span>
