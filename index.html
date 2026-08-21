@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Engineer Life V5 · 骰子除錯修正版</title>
+<title>Engineer Life V6 · ENTER 完整除錯版</title>
 <meta name="theme-color" content="#02070a">
 <style>
 :root{--bg:#02070a;--panel:#061014;--panel2:#08181d;--line:#123b43;--green:#00ffa0;--cyan:#00d9ff;--yellow:#ffd166;--red:#ff5d73;--text:#d9f7ee;--muted:#6f9b92}
@@ -606,8 +606,8 @@ function clamp(n){return Math.max(0,Math.min(100,n))}
 function rand(a){return a[Math.floor(Math.random()*a.length)]}
 function deep(o){return JSON.parse(JSON.stringify(o))}
 function ovr(s){return Math.round((s.tech*1.35+s.stress+s.health*.8+s.comm*.75+s.obedience*.55+s.slack*.35+s.luck*.5)/6.3)}
-function save(){localStorage.setItem("engineerLifeV5",JSON.stringify(state))}
-function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV5")||"null")}catch(e){return null}}
+function save(){localStorage.setItem("engineerLifeV6",JSON.stringify(state))}
+function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV6")||"null")}catch(e){return null}}
 function specialNameData(name){return NAMES.easter.find(x=>x.name===name)}
 function randomName(){return Math.random()<.18?rand(NAMES.easter).name:rand(NAMES.normal)}
 function randomEdu(){return deep(rand(EDUCATION))}
@@ -731,6 +731,56 @@ function startGame(){
   render();
 }
 
+
+function phase(){
+  return PHASES[state.phase];
+}
+function timeline(){
+  return PHASES.map((p,i)=>`
+    <div class="node ${i<state.phase?"done":i===state.phase?"current":""}">
+      <i class="dot"></i>
+      <div><b>${p.year}｜${p.name}</b><br><span>${p.story}</span></div>
+    </div>`).join("");
+}
+function statBlock(){
+  return Object.keys(state.stats).map(k=>`
+    <div class="stat">
+      <div class="statHead"><span>${statLabel(k)}</span><b>${state.stats[k]}</b></div>
+      <div class="bar"><i style="width:${state.stats[k]}%"></i></div>
+    </div>`).join("");
+}
+function drawEvent(){
+  if(!state || state.current || state.result || state.ended || state.prologue)return;
+  ensureV2State();
+
+  const specials=specialTriggerCandidates();
+  if(specials.length){
+    const healthCritical=specials.filter(e=>e.conditions?.some(([label])=>label.includes("健康度")));
+    const pool=healthCritical.length?healthCritical:specials;
+    if(Math.random()<0.72){
+      const ev=deep(rand(pool));
+      state.usedSpecial.push(ev.id);
+      ev.isSpecial=true;
+      state.current=ev;
+      save();
+      render();
+      return;
+    }
+  }
+
+  let pool=EVENTS[phase().id]||EVENTS.entry;
+  let candidates=pool.filter(e=>!state.used.includes(e.title));
+  if(!candidates.length){
+    state.used=[];
+    candidates=pool;
+  }
+  const ev=deep(rand(candidates));
+  state.used.push(ev.title);
+  state.current=ev;
+  save();
+  render();
+}
+
 function choose(i){
   const ev=state.current;
   const ch=ev.choices[i];
@@ -784,7 +834,7 @@ function choose(i){
   save();render();
 }
 function nextTurn(){state.result=null;state.turn++;if(state.turn>=phase().turns){state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`完成 ${phase().name} 四回合，進入重大劇情：${phase().story}`});if(state.phase<PHASES.length-1){state.phase++;state.turn=0;state.year=phase().year;state.age=phase().age;state.salary+=12000;state.jobTitle=phase().name;state.used=[]}else{state.turn=phase().turns}}save();render()}
-function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV5");state=null;render()}}
+function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV6");state=null;render()}}
 
 function engineerPrologue(){
   const pua = state.edu.tier==="S"
@@ -867,6 +917,20 @@ document.addEventListener("input",(e)=>{
     if(statEl && window._draftEdu && window._draftJob){
       statEl.innerHTML=previewStatsV4(window._draftEdu,e.target.value||"未命名工程師",window._draftJob);
     }
+  }
+});
+</script>
+
+
+<script id="v6-runtime-guard">
+window.addEventListener("error",(e)=>{
+  console.error("Engineer Life runtime error:",e.error||e.message);
+  const app=document.getElementById("app");
+  if(app && !document.getElementById("runtimeErrorBox")){
+    app.insertAdjacentHTML("afterbegin",`
+      <div id="runtimeErrorBox" style="position:relative;z-index:9999;margin:10px;padding:12px;border:1px solid #ff5d73;background:#240d13;color:#ffd6dc;font:12px/1.6 monospace">
+        ⚠ 遊戲執行錯誤：${String(e.message||"unknown error")}
+      </div>`);
   }
 });
 </script>
