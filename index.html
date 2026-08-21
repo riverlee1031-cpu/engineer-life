@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Engineer Life V4 · 學歷職系公司開局版</title>
+<title>Engineer Life V5 · 骰子除錯修正版</title>
 <meta name="theme-color" content="#02070a">
 <style>
 :root{--bg:#02070a;--panel:#061014;--panel2:#08181d;--line:#123b43;--green:#00ffa0;--cyan:#00d9ff;--yellow:#ffd166;--red:#ff5d73;--text:#d9f7ee;--muted:#6f9b92}
@@ -606,8 +606,8 @@ function clamp(n){return Math.max(0,Math.min(100,n))}
 function rand(a){return a[Math.floor(Math.random()*a.length)]}
 function deep(o){return JSON.parse(JSON.stringify(o))}
 function ovr(s){return Math.round((s.tech*1.35+s.stress+s.health*.8+s.comm*.75+s.obedience*.55+s.slack*.35+s.luck*.5)/6.3)}
-function save(){localStorage.setItem("engineerLifeV4",JSON.stringify(state))}
-function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV4")||"null")}catch(e){return null}}
+function save(){localStorage.setItem("engineerLifeV5",JSON.stringify(state))}
+function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV5")||"null")}catch(e){return null}}
 function specialNameData(name){return NAMES.easter.find(x=>x.name===name)}
 function randomName(){return Math.random()<.18?rand(NAMES.easter).name:rand(NAMES.normal)}
 function randomEdu(){return deep(rand(EDUCATION))}
@@ -625,13 +625,7 @@ function previewStatsV4(e,name,job){
   applyJobBonus(job,stats);
   return `<div class="startStats">${Object.keys(stats).map(k=>`<div class="startStat"><b>${stats[k]}</b><span>${statLabel(k)}</span></div>`).join("")}</div><p class="note" style="margin-top:10px;color:var(--yellow)">${b.note}｜${job.name} 職系加成已套用</p>`;
 }
-function rerollJobCompany(){
-  const e=window._draftEdu||randomEdu();
-  const j=randomJobForEdu(e),c=randomCompanyForJob(j);
-  window._draftJob=j;window._draftCompany=c;
-  document.getElementById("jobCompanyCard").innerHTML=jobCompanyCard(j,c);
-  document.getElementById("previewStats").innerHTML=previewStatsV4(e,document.getElementById("nameInput").value.trim()||window._draftName,j);
-}
+
 function startScreen(){
   let edu=randomEdu(),name=randomName(),job=randomJobForEdu(edu),company=randomCompanyForJob(job);
   window._draftEdu=edu;window._draftName=name;window._draftJob=job;window._draftCompany=company;
@@ -656,13 +650,87 @@ function startScreen(){
       </div>
       <div class="box">
         <div class="boxTitle">[2] 初始能力預覽 <span>BASE STATS</span></div>
-        <div style="display:flex;gap:12px;margin-bottom:12px;align-items:center"><div class="profileAvatar"><img src="${ENGINEER_AVATAR}"></div><div><b style="font-size:18px">${name}</b><div style="font-size:11px;color:var(--muted);margin-top:5px">${company.name}｜${job.name}</div></div></div>
+        <div style="display:flex;gap:12px;margin-bottom:12px;align-items:center"><div class="profileAvatar"><img src="${ENGINEER_AVATAR}"></div><div><b id="previewName" style="font-size:18px">${name}</b><div id="previewJob" style="font-size:11px;color:var(--muted);margin-top:5px">${company.name}｜${job.name}</div></div></div>
         <div id="previewStats">${previewStatsV4(edu,name,job)}</div>
         <button class="primary" style="margin-top:14px" onclick="startGame()">ENTER 竹科人生 →</button>
       </div>
     </div>
   </div>`;
 }
+
+function currentDraftName(){
+  const el=document.getElementById("nameInput");
+  return (el?.value||window._draftName||randomName()).trim();
+}
+function refreshDraftPreview(){
+  const e=window._draftEdu||randomEdu();
+  const j=window._draftJob||randomJobForEdu(e);
+  const c=window._draftCompany||randomCompanyForJob(j);
+  const n=currentDraftName();
+
+  const eduEl=document.getElementById("eduCard");
+  const jobEl=document.getElementById("jobCompanyCard");
+  const statEl=document.getElementById("previewStats");
+  const nameEl=document.getElementById("previewName");
+  const previewJobEl=document.getElementById("previewJob");
+
+  if(eduEl)eduEl.innerHTML=eduCard(e);
+  if(jobEl)jobEl.innerHTML=jobCompanyCard(j,c);
+  if(statEl)statEl.innerHTML=previewStatsV4(e,n,j);
+  if(nameEl)nameEl.textContent=n;
+  if(previewJobEl)previewJobEl.textContent=`${c.name}｜${j.name}`;
+}
+function rerollName(){
+  const n=randomName();
+  window._draftName=n;
+  const input=document.getElementById("nameInput");
+  if(input)input.value=n;
+  refreshDraftPreview();
+}
+function rerollEdu(){
+  const e=randomEdu();
+  const j=randomJobForEdu(e);
+  const c=randomCompanyForJob(j);
+  window._draftEdu=e;
+  window._draftJob=j;
+  window._draftCompany=c;
+  refreshDraftPreview();
+}
+function rerollJobCompany(){
+  const e=window._draftEdu||randomEdu();
+  const j=randomJobForEdu(e);
+  const c=randomCompanyForJob(j);
+  window._draftJob=j;
+  window._draftCompany=c;
+  refreshDraftPreview();
+}
+function startGame(){
+  const name=currentDraftName();
+  const edu=window._draftEdu||randomEdu();
+  const job=window._draftJob||randomJobForEdu(edu);
+  const company=window._draftCompany||randomCompanyForJob(job);
+
+  let stats=deep(edu.base);
+  const nameBonus=applyNameBonus(name,stats);
+  applyJobBonus(job,stats);
+
+  const salary=Math.round(job.salary*company.salaryMul/1000)*1000;
+  state={
+    name,edu,job,company,stats,
+    phase:0,turn:0,year:2026,age:24,
+    salary,jobTitle:job.name,
+    skillPoints:0,ended:false,ending:null,
+    current:null,result:null,prologue:true,
+    logs:[{
+      when:"2026・24歲",
+      text:`${edu.school} ${edu.dept} ${edu.degree}畢業，進入 ${company.name} 擔任 ${job.name}。${nameBonus.note}`
+    }],
+    used:[],usedSpecial:[]
+  };
+  save();
+  render();
+}
+
 function choose(i){
   const ev=state.current;
   const ch=ev.choices[i];
@@ -716,7 +784,7 @@ function choose(i){
   save();render();
 }
 function nextTurn(){state.result=null;state.turn++;if(state.turn>=phase().turns){state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`完成 ${phase().name} 四回合，進入重大劇情：${phase().story}`});if(state.phase<PHASES.length-1){state.phase++;state.turn=0;state.year=phase().year;state.age=phase().age;state.salary+=12000;state.jobTitle=phase().name;state.used=[]}else{state.turn=phase().turns}}save();render()}
-function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV4");state=null;render()}}
+function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV5");state=null;render()}}
 
 function engineerPrologue(){
   const pua = state.edu.tier==="S"
@@ -786,6 +854,21 @@ render=function(){
     center.insertAdjacentHTML("afterbegin",v3MobileProfile());
   }
 };
+</script>
+
+
+<script id="v5-dice-ui-fix">
+document.addEventListener("input",(e)=>{
+  if(e.target && e.target.id==="nameInput"){
+    window._draftName=e.target.value;
+    const nameEl=document.getElementById("previewName");
+    const statEl=document.getElementById("previewStats");
+    if(nameEl)nameEl.textContent=e.target.value||"未命名工程師";
+    if(statEl && window._draftEdu && window._draftJob){
+      statEl.innerHTML=previewStatsV4(window._draftEdu,e.target.value||"未命名工程師",window._draftJob);
+    }
+  }
+});
 </script>
 
 </body>
