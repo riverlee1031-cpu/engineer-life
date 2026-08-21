@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Engineer Life V6 · ENTER 完整除錯版</title>
+<title>Engineer Life V8 · 版本資訊＋Credit版</title>
 <meta name="theme-color" content="#02070a">
 <style>
 :root{--bg:#02070a;--panel:#061014;--panel2:#08181d;--line:#123b43;--green:#00ffa0;--cyan:#00d9ff;--yellow:#ffd166;--red:#ff5d73;--text:#d9f7ee;--muted:#6f9b92}
@@ -338,6 +338,52 @@ img,canvas,svg{max-width:100%}
 }
 </style>
 
+
+<style id="v7-stage-reward-css">
+.stageReward{
+  border-color:#7b682b!important;
+  background:linear-gradient(180deg,#142d22,#0b1d17)!important
+}
+.rewardPoints{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 12px;margin:10px 0;border:1px solid #6c5b29;background:#211d0e;border-radius:5px
+}
+.rewardPoints b{font-size:26px;color:var(--yellow)}
+.rewardGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.rewardStat{
+  display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;
+  padding:10px;border:1px solid #285057;background:#07171b;border-radius:5px
+}
+.rewardStat b{color:#fff}.rewardStat span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+.rewardStat button{
+  border:1px solid var(--green);background:#0b2a22;color:var(--green);
+  border-radius:4px;padding:8px 10px;font-weight:900
+}
+.rewardStat button:disabled{opacity:.3;cursor:not-allowed}
+.eventTypeBadge{
+  display:inline-block;margin-bottom:7px;padding:4px 7px;border:1px solid #315960;
+  background:#0a2025;color:var(--cyan);font-size:9px;font-weight:900
+}
+@media(max-width:700px){.rewardGrid{grid-template-columns:1fr}}
+</style>
+
+
+<style id="v8-credit-css">
+.versionStrip{
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:12px;padding-top:10px;border-top:1px dashed #1b444a;
+  color:#719a91;font-size:10px
+}
+.versionStrip b{color:var(--green)}
+.creditRiver{color:var(--yellow)!important;font-weight:900}
+.siteFooter{
+  padding:12px 16px;border-top:1px solid var(--line);
+  background:#02090c;color:#52776f;font-size:10px;text-align:center
+}
+.siteFooter b{color:var(--green)}
+.siteFooter .credit{color:var(--yellow)}
+</style>
+
 </head>
 <body>
 <div id="app"></div>
@@ -409,11 +455,11 @@ const EDUCATION=[
  {school:"文化",dept:"資工系",degree:"學士",tier:"D",base:{health:82,obedience:72,stress:57,tech:48,comm:66,slack:69,luck:51}}
 ];
 const PHASES=[
- {id:"entry",year:2026,age:24,name:"竹科新人",desc:"碩士畢業，正式踏進竹科。你以為人生要起飛，主管先丟給你一份 Excel。",turns:4,story:"試用期考核"},
- {id:"rookie2",year:2027,age:25,name:"爆肝工程師",desc:"開始熟悉流程，也開始發現『下班』只是一個概念。",turns:4,story:"年度績效"},
- {id:"senior",year:2029,age:27,name:"資深工程師",desc:"你會 debug 別人的 code，也開始被要求帶新人。",turns:4,story:"升遷或跳槽"},
- {id:"middle",year:2032,age:30,name:"中生代工程師",desc:"薪水變高，肝也變貴。你開始想：要繼續技術線，還是轉管理？",turns:4,story:"職涯分岔"},
- {id:"late",year:2037,age:35,name:"科技業老兵",desc:"你已經看過太多專案、主管和 PPT。真正的問題變成：還要撐多久？",turns:4,story:"人生結算"}
+ {id:"entry",year:2026,age:24,name:"竹科新人",desc:"碩士畢業，正式踏進竹科。你以為人生要起飛，主管先丟給你一份 Excel。",turns:3,story:"試用期考核"},
+ {id:"rookie2",year:2027,age:25,name:"爆肝工程師",desc:"開始熟悉流程，也開始發現『下班』只是一個概念。",turns:3,story:"年度績效"},
+ {id:"senior",year:2029,age:27,name:"資深工程師",desc:"你會 debug 別人的 code，也開始被要求帶新人。",turns:3,story:"升遷或跳槽"},
+ {id:"middle",year:2032,age:30,name:"中生代工程師",desc:"薪水變高，肝也變貴。你開始想：要繼續技術線，還是轉管理？",turns:3,story:"職涯分岔"},
+ {id:"late",year:2037,age:35,name:"科技業老兵",desc:"你已經看過太多專案、主管和 PPT。真正的問題變成：還要撐多久？",turns:3,story:"人生結算"}
 ];
 const EVENTS={entry:[
  {title:"主管晚上 10:47 傳來訊息",cat:"竹科日常｜加班",desc:"訊息只有一句：『這版今天能不能幫我看一下？』你明天早上九點還有會議。",choices:[
@@ -433,6 +479,9 @@ const EVENTS={entry:[
   {label:"負責整理 log",sub:"先做自己能做的",risk:"穩定",fx:[["tech",2],["obedience",3]]},
   {label:"默默坐角落",sub:"等有人分工",risk:"低存在感",fx:[["slack",3],["comm",-2]]}]}
 ]};
+
+const JOB_EVENTS={"rd":[{"title":"Tape-out 前夕，模擬結果突然飄掉","cat":"RD｜設計驗證","desc":"離 deadline 只剩一天，corner case 在凌晨突然爆掉。學長只留一句：『這個以前不會啊。』主管已經開始問幾點能給結果。","choices":[{"label":"重跑所有模擬","sub":"從頭確認，不賭運氣","risk":"技術成長高，但健康消耗","fx":[["tech",5],["health",-4],["stress",2]],"good":"你真的抓到一個平常不會出現的條件錯誤，隔天 review 時反而變成救火英雄。","mid":"模擬跑完沒有找到致命問題，但至少你能證明不是自己亂改造成的。","bad":"跑到早上還是沒有答案，主管最後決定先 workaround，你的黑眼圈倒是成功 tape-out。"},{"label":"沿用舊版參數","sub":"先讓數字長得正常","risk":"短期過關、長期風險","fx":[["slack",3],["obedience",2],["tech",-1]],"good":"這次舊參數居然真的能用，大家順利過關，但你默默把它記成技術債。","mid":"結果勉強能交，review 時被問兩句，你裝鎮定混了過去。","bad":"客戶一跑就重現問題，mail thread 直接把你名字放在最上面。"},{"label":"找資深同事一起看","sub":"把問題拆開求援","risk":"需要溝通力","fx":[["comm",4],["tech",3]],"good":"對方五分鐘就指出你卡一晚的盲點。你第一次感受到『會問問題』也是工程能力。","mid":"兩個人一起看了很久，至少方向變清楚。","bad":"學長只回你一句『這不是很基本嗎』，然後把問題退回來。"}]},{"title":"實驗數據跟理論完全相反","cat":"RD｜實驗室","desc":"你照論文推導做完，結果曲線直接反方向。學長說儀器沒壞，主管說下午要報告，宇宙說你自己想辦法。","choices":[{"label":"重新校正設備","sub":"先懷疑工具","risk":"穩健","fx":[["tech",4],["stress",2]],"good":"果然是校正值被前一組人改過，你救回數據也順便救回自尊。","mid":"設備正常，至少排除一個方向。","bad":"校正完還是一樣，你浪費兩小時後又回到原點。"},{"label":"修改模型假設","sub":"承認理論可能不完整","risk":"高技術成長","fx":[["tech",5],["health",-2]],"good":"你補上一個被忽略的條件，結果開始吻合，甚至變成下次簡報重點。","mid":"模型改善一點，但還說不上漂亮。","bad":"你越改越複雜，最後連自己都看不懂。"},{"label":"把異常點先拿掉","sub":"圖先畫漂亮再說","risk":"工程師邪道","fx":[["slack",5],["obedience",1]],"good":"異常點真的是量測污染，這次你僥倖蒙對。","mid":"簡報過了，但你知道這件事早晚會回來。","bad":"主管當場問『那三個點為什麼不見？』會議室瞬間安靜。"}]}],"process":[{"title":"半夜機台 alarm 狂響，產線電話直接打到你床頭","cat":"製程｜夜間值班","desc":"凌晨 2:16，值班群組連續 tag 你。機台停著每分鐘都在燒錢，你的眼睛也快燒掉。","choices":[{"label":"立刻進廠","sub":"穿衣服出門救線","risk":"奴性與健康交換","fx":[["obedience",5],["health",-5],["stress",3]],"good":"你快速定位參數飄移，產線恢復，主管隔天難得主動稱讚。","mid":"最後是設備端問題，你忙了一夜至少證明不是製程。","bad":"你太累看錯數值，反而多停了一小時，群組開始出現長官。"},{"label":"遠端先看 log","sub":"先判斷是否真的需要進廠","risk":"技術／判斷","fx":[["tech",3],["slack",2]],"good":"你遠端就找出問題，甚至不用出門，第一次覺得自己像資深工程師。","mid":"遠端只能看出大概，最後還是得進廠。","bad":"你判斷沒事，結果十分鐘後 alarm 變紅色，電話直接升級到經理。"},{"label":"叫設備工程師先看","sub":"先確認是不是機台問題","risk":"溝通力","fx":[["comm",4],["obedience",-1]],"good":"設備端真的先出問題，對方處理完你成功多睡兩小時。","mid":"雙方一起查，至少責任不是你一個人扛。","bad":"設備端說『製程 recipe 的問題吧』，球完整踢回你這邊。"}]},{"title":"良率突然掉 3%，會議室開始找戰犯","cat":"製程｜良率會議","desc":"數字掉下來後，每個部門都開始證明不是自己。你只是工程師，卻突然覺得自己在刑事偵查組。","choices":[{"label":"把歷史資料全部拉出來","sub":"用數據說話","risk":"耗時但扎實","fx":[["tech",4],["health",-3]],"good":"你找到一個跨站點共通變因，會議從互甩鍋變成真的開始解問題。","mid":"資料很多但訊號不強，至少你沒有被列第一嫌疑人。","bad":"Excel 當掉兩次，你熬夜做的 pivot table 還被嫌看不懂。"},{"label":"先順著主管方向查","sub":"主管說哪裡就看哪裡","risk":"奴性上升","fx":[["obedience",5],["stress",2]],"good":"主管這次居然猜對，你順勢變成執行功臣。","mid":"方向普通，至少沒有得罪人。","bad":"查了兩天證明完全無關，最後大家默默換方向，沒人道歉。"},{"label":"直接指出前站資料異常","sub":"把球丟回去","risk":"政治風險","fx":[["comm",4],["stress",3]],"good":"證據夠硬，前站自己承認參數有改動。","mid":"雙方僵持一陣，最後決定一起查。","bad":"對方主管比你主管大兩級，你當場被教育『溝通方式』。"}]}],"it":[{"title":"全公司 VPN 掛掉，大家突然想起 IT 的存在","cat":"IT｜系統大當機","desc":"早上 9:03，全公司連不上內網。平常沒人知道你坐哪，現在每個部門都知道你的分機。","choices":[{"label":"逐層排查網路","sub":"按照 SOP 來","risk":"穩定","fx":[["tech",4],["stress",3]],"good":"你找到核心交換器異常，半小時內恢復，全公司短暫把你當神。","mid":"恢復了但原因不明，你決定先不要碰任何東西。","bad":"你重啟了錯的服務，原本只有 VPN 掛掉，現在連 mail 也一起走。"},{"label":"直接重開核心設備","sub":"經典 IT 解法","risk":"高波動","fx":[["luck",4],["slack",3]],"good":"重開之後全部正常，大家以為你用了什麼高深技術。","mid":"恢復一半，至少有人可以工作。","bad":"設備沒起來，機房開始出現管理層。"},{"label":"先公告『已知悉處理中』","sub":"買時間再說","risk":"溝通優先","fx":[["comm",5],["stress",1]],"good":"公告寫得夠清楚，抱怨電話少一半，你終於能專心查。","mid":"大家還是一直問，但至少少一點。","bad":"主管嫌公告語氣不夠積極，叫你重寫三版。"}]},{"title":"主管要你幫忙修他家裡的 Wi-Fi","cat":"IT｜職務邊界","desc":"他笑著說『你們 IT 應該很快吧』，然後傳來一張家用路由器照片。你開始懷疑公司 JD 是否包含家庭服務。","choices":[{"label":"下班去幫他弄","sub":"把人情做滿","risk":"奴性爆升","fx":[["obedience",6],["health",-2]],"good":"五分鐘修好，主管對你印象大好，之後請假意外很好講。","mid":"弄了一小時才好，至少吃到一頓晚餐。","bad":"問題其實是電信商，最後你白跑一趟還被問是不是設定錯。"},{"label":"遠端教他重開機","sub":"最低成本支援","risk":"摸魚力","fx":[["slack",4],["comm",2]],"good":"一重開就好了，你再次證明 IT 世界的真理。","mid":"暫時能用，明天再說。","bad":"他按錯 reset，現在整台路由器回原廠。"},{"label":"婉拒私人設備","sub":"守住工作邊界","risk":"主管觀感","fx":[["stress",3],["obedience",-4]],"good":"主管竟然接受，還說你很有原則。","mid":"氣氛有點尷尬但沒事。","bad":"下次績效面談，他突然說你『團隊合作可以再積極一點』。"}]}],"qa":[{"title":"RD 說『我這邊測都正常』，但你的 bug 每次都重現","cat":"QA｜跨部門戰爭","desc":"你附了影片、log、版本號，對方還是回：cannot reproduce。你開始懷疑自己是不是活在平行宇宙。","choices":[{"label":"把重現步驟寫到不能再細","sub":"連滑鼠點哪都寫","risk":"耐心流","fx":[["tech",3],["comm",4]],"good":"RD 終於重現，還默默把 bug priority 改高。","mid":"對方承認有機率發生，但先排下個版本。","bad":"對方回你『照你的步驟還是不會』，你血壓開始上升。"},{"label":"直接拉 RD 到座位看","sub":"現場證明","risk":"社交壓力","fx":[["comm",5],["stress",2]],"good":"你一按就爆，現場瞬間安靜，bug 從『疑似』升級成『緊急』。","mid":"現場試了三次才出現，至少不是幻覺。","bad":"RD 一站旁邊 bug 就消失，你看起來像在演戲。"},{"label":"先關單","sub":"算了，人生很短","risk":"摸魚高","fx":[["slack",5],["tech",-1]],"good":"後續版本真的沒再出現，你賭對一次。","mid":"暫時平安。","bad":"客戶隔週直接報同一個問題，ticket 上還能看到是你關的。"}]},{"title":"測試機只剩一台，三個專案都說自己最急","cat":"QA｜資源搶奪","desc":"大家都說 deadline 是今天，設備卻不會分身。你手上的排程表看起來像聯合國談判。","choices":[{"label":"照優先級排隊","sub":"誰大誰先","risk":"政治正確","fx":[["stress",3],["obedience",3]],"good":"排程雖然有人不爽，但最後沒人真的出事。","mid":"每組都抱怨一點，算平均傷害。","bad":"主管臨時改 priority，你排半天全部重來。"},{"label":"拆時段輪流用","sub":"把時間切碎","risk":"管理力","fx":[["comm",4],["tech",2]],"good":"三組都勉強拿到數據，你成功當了一天調度中心。","mid":"切換成本很高，但有交差。","bad":"其中一組超時，後面全部 domino 延遲。"},{"label":"叫大家自己搶","sub":"讓市場決定資源","risk":"混亂","fx":[["slack",5],["stress",-1]],"good":"他們居然自己談好了，你完全沒事。","mid":"吵一陣後還是分出結果。","bad":"最後三組一起跑來找你主管，你變成制度問題本人。"}]}],"ai":[{"title":"模型訓練三天，最後發現資料標籤錯了","cat":"AI｜模型訓練","desc":"GPU 燒了三天，loss 看起來還挺漂亮。直到你打開原始資料，發現 label mapping 整批偏一格。","choices":[{"label":"全部重跑","sub":"承認錯誤，從頭來","risk":"健康代價高","fx":[["tech",5],["health",-4]],"good":"重跑後效果大幅提升，你把這次事故寫成新的資料檢查流程。","mid":"結果正常，時間沒了。","bad":"重跑到一半 GPU quota 又被別組搶走。"},{"label":"寫 script 修正後續處理","sub":"不重跑 backbone","risk":"技術解法","fx":[["tech",5],["luck",2]],"good":"修正有效，省下大量算力，主管覺得你很會救火。","mid":"指標回來一些，能交差。","bad":"你修了標籤卻引入新 bias，評估結果更奇怪。"},{"label":"先做漂亮 demo","sub":"模型細節下週再說","risk":"簡報工程","fx":[["comm",4],["slack",4]],"good":"demo 效果超好，高層只看到畫面沒問指標。","mid":"簡報過關，但技術債留下。","bad":"高層偏偏問了 accuracy，你開始現場 freestyle。"}]},{"title":"高層一句『我們也要做生成式 AI』，下週要 demo","cat":"AI｜高層需求","desc":"沒有資料、沒有 GPU、沒有產品定義，但簡報上已經寫『AI First』。你被指定為技術窗口。","choices":[{"label":"先做 PoC","sub":"把範圍縮到最小","risk":"務實","fx":[["tech",4],["comm",3]],"good":"你成功把幻想縮成可 demo 的功能，高層看完很滿意。","mid":"能跑，但大家都知道離產品還很遠。","bad":"需求每天變，PoC 最後變成四不像。"},{"label":"直接用現成 API","sub":"先讓東西動起來","risk":"高效率","fx":[["slack",4],["comm",3]],"good":"兩天做出成果，所有人以為你很會 AI。","mid":"demo 能動，只是成本有點驚人。","bad":"API 當天 rate limit，demo 在高層面前轉圈圈。"},{"label":"認真解釋需要半年","sub":"試圖教育高層","risk":"政治高風險","fx":[["stress",4],["obedience",-4]],"good":"意外遇到懂技術的主管，專案真的獲得合理時程。","mid":"大家點頭，隔天 deadline 還是下週。","bad":"會議結論寫：『工程端缺乏積極性』。"}]}],"fae":[{"title":"客戶現場說：『昨天還好好的，今天你們的板子全掛』","cat":"FAE｜客戶現場","desc":"你站在客戶會議室，後面一排人看著你。總公司 RD 還沒回訊息，客戶已經問能不能今天解。","choices":[{"label":"現場抓 log","sub":"先把證據拿到","risk":"技術＋溝通","fx":[["tech",3],["comm",4],["stress",2]],"good":"你很快發現其實是客戶環境改動，氣氛瞬間從審判變合作。","mid":"問題縮小一半，至少今晚不用全公司陪葬。","bad":"log 一片空白，客戶開始問你們產品是不是沒做完整。"},{"label":"先安撫客戶","sub":"技術晚點，情緒先處理","risk":"FAE 必修","fx":[["comm",6],["obedience",2]],"good":"客戶願意給你一天時間，你成功把危機從 P0 降成 P1。","mid":"情緒穩住，但問題還在。","bad":"客戶說『我不要聽原因，我要 solution』，你只能微笑。"},{"label":"直接 call RD","sub":"把後端專家拉進來","risk":"人脈","fx":[["comm",3],["stress",3]],"good":"RD 秒接，兩邊一起定位問題，你像真正的橋樑。","mid":"RD 過半小時才進來，總算有進展。","bad":"RD 回你『我現在很忙，你先收資訊』，客戶全聽到了。"}]},{"title":"客戶要你承諾一個 RD 根本沒答應的時程","cat":"FAE｜承諾陷阱","desc":"業務在旁邊瘋狂點頭，客戶問：『兩週可以吧？』你知道 RD 昨天才說至少六週。","choices":[{"label":"先答應兩週","sub":"現場氣氛最重要","risk":"未來爆炸","fx":[["obedience",5],["comm",2]],"good":"RD 居然有現成方案，兩週真的做完，你被當神。","mid":"最後延期一點，客戶勉強接受。","bad":"RD 聽到兩週直接在群組 @你：『誰答應的？』"},{"label":"現場說要回去確認","sub":"不亂開支票","risk":"穩健","fx":[["stress",3],["comm",4]],"good":"客戶接受正式評估，後來排出合理時程。","mid":"客戶不太爽但能理解。","bad":"業務私下說你『不夠 customer-oriented』。"},{"label":"把 RD 拉進會議","sub":"讓真正做的人自己講","risk":"會議戰術","fx":[["slack",3],["comm",3]],"good":"RD 直接說明限制，客戶反而比較信。","mid":"會議延長一小時，至少責任共同承擔。","bad":"RD 跟客戶現場辯起來，你變成翻譯兼消防員。"}]}],"hw":[{"title":"板子第一次上電，電源供應器瞬間限流","cat":"硬體｜Bring-up","desc":"整組人盯著板子，你按下 power。啪，電流直接衝上限。空氣裡出現一種工程師最熟悉的沉默。","choices":[{"label":"立刻斷電逐點量測","sub":"照流程找短路","risk":"技術穩健","fx":[["tech",5],["stress",2]],"good":"你找到焊接短路，修掉之後板子正常開機，全組鬆一口氣。","mid":"查到可疑區域，至少沒有再冒煙。","bad":"量了一圈沒答案，最後發現 layout 根本錯層。"},{"label":"換一片再試","sub":"希望只是單板問題","risk":"賭運氣","fx":[["luck",4],["slack",2]],"good":"第二片正常，原來只是組裝瑕疵。","mid":"第二片好一點但還是不穩。","bad":"第二片也限流，證明問題是設計，大家一起看你。"},{"label":"先摸 IC 溫度","sub":"工程師手指 sensor","risk":"不推薦但常見","fx":[["tech",2],["health",-2]],"good":"你真的摸到一顆異常熱的 IC，很快縮小範圍。","mid":"感覺都差不多熱，沒有答案。","bad":"你被燙到縮手，學長還補一句『不要用手量啦』。"}]},{"title":"EMI 測試差 1 dB 過不了","cat":"硬體｜認證地獄","desc":"只差一點點，但規範就是規範。實驗室計時收費，主管在問能不能今天解決。","choices":[{"label":"重新檢查 grounding","sub":"從根本處理","risk":"技術高","fx":[["tech",5],["health",-2]],"good":"你改一個接地點就壓下 3 dB，現場的人都說漂亮。","mid":"改善一點，還得再調。","bad":"改完另一個頻段反而爆掉。"},{"label":"貼銅箔試試","sub":"硬體界的萬用膠帶","risk":"快速 workaround","fx":[["slack",4],["luck",3]],"good":"銅箔一貼居然過了，大家決定先不要問為什麼。","mid":"差距縮小，還要再補幾個位置。","bad":"貼滿像木乃伊還是沒過，測試工程師開始憋笑。"},{"label":"延後認證","sub":"不要拿量產風險開玩笑","risk":"時程壓力","fx":[["stress",4],["obedience",-3]],"good":"主管接受，後來正式修改一次過關。","mid":"時程延遲但風險可控。","bad":"專案經理直接把延遲原因寫成『HW issue』。"}]}]};
+const COMMON_DETAIL_EVENTS=[{"title":"公司公告：為了節省成本，取消免費咖啡與衛生紙","cat":"公司政策瞎事｜Cost Down","desc":"全員信寫著『共體時艱、永續經營』。咖啡機被貼上暫停使用，廁所則出現『請自備個人衛生用品』的神秘告示。隔壁同事開始認真計算公司一年到底省多少。","choices":[{"label":"自帶咖啡與衛生紙","sub":"先活下去再說","risk":"現實派","fx":[["stress",2],["slack",2]],"good":"你準備充分，甚至開始團購，莫名變成辦公室物資長。","mid":"生活品質下降一點，但人還活著。","bad":"你每天背一大包衛生紙通勤，突然不知道自己念碩士是為了什麼。"},{"label":"匿名論壇發文爆料","sub":"讓鄉民評評理","risk":"高曝光","fx":[["comm",3],["luck",3]],"good":"文章爆紅，公司隔週默默恢復咖啡，還說是『員工體驗優化』。","mid":"大家笑一笑，公司沒反應。","bad":"主管開始查誰在外面發文，你突然非常安靜。"},{"label":"喝白開水，當作健康政策","sub":"自我催眠","risk":"健康小加成","fx":[["health",2],["obedience",3]],"good":"你意外戒掉每天三杯咖啡，睡眠反而好一點。","mid":"你接受現實。","bad":"下午三點直接靈魂出竅，工作效率歸零。"}]},{"title":"研發處大當機，傳聞是總經理動了機房的『鎮廠之寶』","cat":"高層風水瞎事｜機房玄學","desc":"機房突然大面積服務異常。資深同事低聲說，昨天總經理嫌角落那顆石頭不好看，叫人搬走；那顆據說是前任 CIO 留下的『不能動』。","choices":[{"label":"照技術流程查","sub":"拒絕相信風水","risk":"理工精神","fx":[["tech",4],["stress",2]],"good":"最後找到真正原因是 UPS 韌體問題，你成功替科學挽回一局。","mid":"技術問題很多，石頭暫時無罪。","bad":"查了一天沒結果，有人偷偷把石頭搬回去後系統竟然恢復。"},{"label":"先把鎮廠之寶搬回去","sub":"科學可以等等","risk":"玄學流","fx":[["luck",5],["slack",3]],"good":"搬回去十分鐘後服務恢復，全公司開始對石頭行注目禮。","mid":"系統還是掛，但至少大家心裡舒服一點。","bad":"石頭搬回去沒用，高層又要求換方向擺。"},{"label":"拍照傳群組做迷因","sub":"先留下歷史紀錄","risk":"社交娛樂","fx":[["comm",3],["slack",4]],"good":"迷因在內部瘋傳，壓力瞬間下降。","mid":"同事笑一笑繼續修。","bad":"照片轉到主管群，你被提醒『注意資訊安全』。"}]},{"title":"剛進公司，學長熱情請你喝咖啡","cat":"新人社交｜學長的善意？","desc":"他主動帶你認識環境、請你咖啡，還說『有問題都可以問我』。你感動到差點以為科技業其實很有人情味。","choices":[{"label":"跟學長走很近","sub":"什麼都聽他的","risk":"可能遇到貴人，也可能踩雷","fx":[["comm",4],["obedience",4]],"good":"這次你真的遇到好學長，他把多年踩坑經驗全教你，你少走很多冤枉路。","mid":"學長人不壞，只是很愛講當年勇，你喝掉很多咖啡。","bad":"你後來才發現他教你的流程早就過期，還把自己不想做的工作包成『新人必學』丟給你。"},{"label":"保持友好但自己查證","sub":"人情歸人情，技術歸技術","risk":"最穩健","fx":[["comm",3],["tech",3]],"good":"你既建立關係又沒盲信，後來成功避掉他一個過時建議。","mid":"關係正常，工作也正常。","bad":"學長覺得你不夠信任他，之後態度稍微冷掉。"},{"label":"禮貌喝完就保持距離","sub":"先觀察再說","risk":"低社交","fx":[["stress",2],["comm",-1]],"good":"後來發現他在部門評價很兩極，你慶幸沒有太快站隊。","mid":"沒發生什麼，你就是普通新人。","bad":"你錯過一個其實很願意帶人的學長，之後只能自己摸索。"}]},{"title":"HR 推出『幸福企業週』，活動是下班後強制團建","cat":"公司政策瞎事｜幸福企業","desc":"信件標題寫著 Work-Life Balance，活動時間是週五晚上 7 點到 10 點，還特別註明『原則上全員參加』。","choices":[{"label":"全程參加","sub":"演出一個快樂員工","risk":"奴性＋","fx":[["obedience",5],["health",-2]],"good":"你抽到禮券，至少三小時不是完全浪費。","mid":"唱歌拍照結束，人生少了三小時。","bad":"活動結束主管說『既然大家都在，要不要順便討論一下專案？』"},{"label":"吃完東西先走","sub":"精準參與","risk":"摸魚技術","fx":[["slack",5],["comm",2]],"good":"你成功在點名後離場，還帶走兩盒點心。","mid":"沒人注意。","bad":"團體照剛好缺你，隔天被問去哪。"},{"label":"直接說有事不去","sub":"守住週五晚上","risk":"抗壓／邊界","fx":[["stress",3],["obedience",-3]],"good":"主管完全沒意見，你第一次發現很多『強制』其實只是大家不敢拒絕。","mid":"被嘴兩句而已。","bad":"績效面談突然出現『團隊融入度』四個字。"}]},{"title":"主管宣布導入新 KPI：每天要填 12 個欄位證明自己有在工作","cat":"管理制度瞎事｜KPI","desc":"其中包含『今日價值產出』『跨部門協作次數』『創新思考紀錄』。真正填表時間大概比創新時間還久。","choices":[{"label":"每天認真填滿","sub":"把填表也當工作","risk":"奴性＋","fx":[["obedience",5],["health",-2]],"good":"你的表寫得太完整，被拿去當範本，主管很滿意。","mid":"每天下班多花二十分鐘。","bad":"因為寫太詳細，主管開始針對每格追問。"},{"label":"寫一套模板複製貼上","sub":"自動化人類","risk":"摸魚高手","fx":[["slack",6],["tech",2]],"good":"你十分鐘解決整週 KPI，還順便教同事用公式。","mid":"沒人發現。","bad":"你忘了改日期，整週內容一模一樣被抓包。"},{"label":"直接問這 KPI 能解決什麼","sub":"理性挑戰制度","risk":"政治風險","fx":[["comm",4],["stress",3]],"good":"主管其實也覺得很蠢，最後改成每週填一次。","mid":"得到一句『這是上面的要求』。","bad":"你被邀請參加更多 KPI 設計會議。"}]}];
 
 const SPECIAL_EVENTS=[
   {
@@ -570,7 +619,7 @@ function ensureV2State(){
   if(!state)return;
   if(state.skillPoints===undefined)state.skillPoints=0;
   if(state.ended===undefined)state.ended=false;
-  if(!Array.isArray(state.usedSpecial))state.usedSpecial=[];
+  if(!Array.isArray(state.usedSpecial))state.usedSpecial=[];if(state.stageReward===undefined)state.stageReward=null;
 }
 function applySkillPoints(n){
   state.skillPoints=(state.skillPoints||0)+n;
@@ -606,8 +655,8 @@ function clamp(n){return Math.max(0,Math.min(100,n))}
 function rand(a){return a[Math.floor(Math.random()*a.length)]}
 function deep(o){return JSON.parse(JSON.stringify(o))}
 function ovr(s){return Math.round((s.tech*1.35+s.stress+s.health*.8+s.comm*.75+s.obedience*.55+s.slack*.35+s.luck*.5)/6.3)}
-function save(){localStorage.setItem("engineerLifeV6",JSON.stringify(state))}
-function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV6")||"null")}catch(e){return null}}
+function save(){localStorage.setItem("engineerLifeV8",JSON.stringify(state))}
+function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV8")||"null")}catch(e){return null}}
 function specialNameData(name){return NAMES.easter.find(x=>x.name===name)}
 function randomName(){return Math.random()<.18?rand(NAMES.easter).name:rand(NAMES.normal)}
 function randomEdu(){return deep(rand(EDUCATION))}
@@ -629,14 +678,17 @@ function previewStatsV4(e,name,job){
 function startScreen(){
   let edu=randomEdu(),name=randomName(),job=randomJobForEdu(edu),company=randomCompanyForJob(job);
   window._draftEdu=edu;window._draftName=name;window._draftJob=job;window._draftCompany=company;
-  return `<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · 竹科賣肝人生</div></div>
+  return `<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · V8.0 · 竹科賣肝人生</div></div>
   <div class="startWrap">
     <div class="hero">
       <div class="ascii">╔══════════════════════════════════════╗
 ║ Engineer Life · 新竹科學園區人生模擬器 ║
 ╚══════════════════════════════════════╝</div>
       <h1>從畢業那天開始，人生正式進入 debug 模式。</h1>
-      <p>先骰出你的學歷、公司與職系。不同學歷會影響能進入哪些職位；不同職位與公司則會直接改變初始薪資、能力值和後續事件。</p>
+      <p>恭喜你，終於熬過論文、口試、教授一句「再改一下」，正式取得那張爸媽準備拿去跟親戚炫耀的畢業證書。接下來請先骰出你的<strong>學歷、公司與職系</strong>——因為在這個世界裡，起跑點真的會影響你第一份工作是坐在冷氣房 debug，還是凌晨兩點被電話叫回廠。</p>
+      <p>不同學歷會影響你能進哪些職位；不同公司與職系則會直接改變<strong>起薪、能力值、加班密度、主管幹話濃度</strong>，以及你未來會遇到什麼鬼故事。你可能進大廠領高薪、被獵頭追著跑，也可能每天填 KPI、搶測試機、半夜救機台，甚至發現公司真的為了 cost down 把免費咖啡和衛生紙一起砍掉。</p>
+      <p>總之，歡迎來到 Engineer Life。你以為你是來改變科技業的，科技業目前比較想先看看你的肝能撐多久。<strong>至於你能不能活得下去……那就看你的健康度、運氣，還有主管今天心情。</strong></p>
+      <div class="versionStrip"><span>目前版本：<b>V8.0</b> · Responsive / Job Events / Conditional Endings</span><span class="creditRiver">CREDIT BY RIVER</span></div>
     </div>
     <div class="setupGrid">
       <div class="box">
@@ -720,7 +772,7 @@ function startGame(){
     phase:0,turn:0,year:2026,age:24,
     salary,jobTitle:job.name,
     skillPoints:0,ended:false,ending:null,
-    current:null,result:null,prologue:true,
+    current:null,result:null,prologue:true,stageReward:null,
     logs:[{
       when:"2026・24歲",
       text:`${edu.school} ${edu.dept} ${edu.degree}畢業，進入 ${company.name} 擔任 ${job.name}。${nameBonus.note}`
@@ -750,37 +802,41 @@ function statBlock(){
     </div>`).join("");
 }
 function drawEvent(){
-  if(!state || state.current || state.result || state.ended || state.prologue)return;
+  if(!state || state.current || state.result || state.ended || state.prologue || state.stageReward)return;
   ensureV2State();
 
   const specials=specialTriggerCandidates();
   if(specials.length){
     const healthCritical=specials.filter(e=>e.conditions?.some(([label])=>label.includes("健康度")));
     const pool=healthCritical.length?healthCritical:specials;
-    if(Math.random()<0.72){
+    if(Math.random()<0.68){
       const ev=deep(rand(pool));
       state.usedSpecial.push(ev.id);
       ev.isSpecial=true;
       state.current=ev;
-      save();
-      render();
-      return;
+      save();render();return;
     }
   }
 
-  let pool=EVENTS[phase().id]||EVENTS.entry;
-  let candidates=pool.filter(e=>!state.used.includes(e.title));
-  if(!candidates.length){
-    state.used=[];
-    candidates=pool;
-  }
-  const ev=deep(rand(candidates));
-  state.used.push(ev.title);
-  state.current=ev;
-  save();
-  render();
-}
+  const jobPool=(JOB_EVENTS[state.job?.id]||[]);
+  const commonPool=COMMON_DETAIL_EVENTS;
+  const basePool=EVENTS[phase().id]||EVENTS.entry;
 
+  let pool;
+  const r=Math.random();
+  if(jobPool.length && r<0.52) pool=jobPool;
+  else if(r<0.82) pool=commonPool;
+  else pool=basePool;
+
+  let candidates=pool.filter(e=>!state.used.includes(e.title));
+  if(!candidates.length)candidates=pool;
+  const ev=deep(rand(candidates));
+  ev.eventType = pool===jobPool ? "職系專屬事件" : pool===commonPool ? "公司荒謬事件" : "一般職場事件";
+  state.used.push(ev.title);
+  state.used=state.used.slice(-10);
+  state.current=ev;
+  save();render();
+}
 function choose(i){
   const ev=state.current;
   const ch=ev.choices[i];
@@ -804,14 +860,8 @@ function choose(i){
     tier=roll>=5?"good":roll<=2?"bad":"mid";
   }
 
-  if(roll===6){
-    state.stats.luck=clamp(state.stats.luck+2);
-    deltas.push("運氣 +2");
-  }
-  if(roll===1){
-    state.stats.health=clamp(state.stats.health-2);
-    deltas.push("健康度 -2");
-  }
+  if(roll===6){state.stats.luck=clamp(state.stats.luck+2);deltas.push("運氣 +2")}
+  if(roll===1){state.stats.health=clamp(state.stats.health-2);deltas.push("健康度 -2")}
 
   if(ev.isSpecial && ch.skill){
     applySkillPoints(ch.skill);
@@ -821,20 +871,84 @@ function choose(i){
   let txt;
   if(ev.isSpecial){
     txt=tier==="good"?rand(ev.good):rand(ev.bad);
+  }else if(ch.good || ch.mid || ch.bad){
+    txt=tier==="good"?(ch.good||ch.mid):tier==="bad"?(ch.bad||ch.mid):(ch.mid||ch.good);
   }else{
     txt=roll>=5?"結果比預期順利，至少這次你沒有成為群組裡被 tag 的那個人。":
-        roll<=2?"事情往不太妙的方向發展，你開始理解『職場經驗』通常就是踩雷後留下來的東西。":
-        "沒有奇蹟，也沒有爆炸。你把這一回合撐過去了。";
+      roll<=2?"事情往不太妙的方向發展，你開始理解『職場經驗』通常就是踩雷後留下來的東西。":
+      "沒有奇蹟，也沒有爆炸。你把這一回合撐過去了。";
   }
 
   const ended=ev.isSpecial?maybeTriggerEnding(ev,roll):false;
-  state.result={roll,title:ev.title,text:txt,deltas,isSpecial:!!ev.isSpecial,tier,ended};
+  state.result={roll,title:ev.title,text:txt,deltas,isSpecial:!!ev.isSpecial,tier,ended,eventType:ev.eventType};
   state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`${ev.title}｜${ch.label}｜骰到 ${roll}`});
   state.current=null;
   save();render();
 }
-function nextTurn(){state.result=null;state.turn++;if(state.turn>=phase().turns){state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`完成 ${phase().name} 四回合，進入重大劇情：${phase().story}`});if(state.phase<PHASES.length-1){state.phase++;state.turn=0;state.year=phase().year;state.age=phase().age;state.salary+=12000;state.jobTitle=phase().name;state.used=[]}else{state.turn=phase().turns}}save();render()}
-function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV6");state=null;render()}}
+function nextTurn(){
+  state.result=null;
+  state.turn++;
+  if(state.turn>=phase().turns){
+    const finished=phase();
+    const points=1+Math.floor(Math.random()*4);
+    state.skillPoints=(state.skillPoints||0)+points;
+    state.stageReward={
+      phaseName:finished.name,
+      story:finished.story,
+      awarded:points
+    };
+    state.logs.unshift({
+      when:`${state.year}・${state.age}歲`,
+      text:`撐過 ${finished.name} 三回合，獲得 ${points} 點自由能力點。`
+    });
+
+    if(state.phase<PHASES.length-1){
+      state.phase++;
+      state.turn=0;
+      state.year=phase().year;
+      state.age=phase().age;
+      state.salary+=12000;
+      state.used=[];
+    }else{
+      state.turn=finished.turns;
+    }
+  }
+  save();render();
+}
+function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV8");state=null;render()}}
+
+
+function v7PointCost(k){return k==="health"?2:1}
+function spendStagePoint(k){
+  const cost=v7PointCost(k);
+  if((state.skillPoints||0)<cost || state.stats[k]>=100)return;
+  state.skillPoints-=cost;
+  state.stats[k]=clamp(state.stats[k]+1);
+  save();render();
+}
+function finishStageReward(){
+  state.stageReward=null;
+  save();render();
+}
+function stageRewardCard(){
+  const r=state.stageReward;
+  const rows=Object.keys(state.stats).map(k=>{
+    const cost=v7PointCost(k);
+    return `<div class="rewardStat">
+      <div><b>${statLabel(k)}｜${state.stats[k]}</b><span>${k==="health"?"健康最難補：每 +1 消耗 2 點":"每 +1 消耗 1 點"}</span></div>
+      <button ${state.skillPoints<cost||state.stats[k]>=100?"disabled":""} onclick="spendStagePoint('${k}')">＋1</button>
+    </div>`;
+  }).join("");
+  return `<div class="box stageReward">
+    <div class="kicker">STAGE CLEAR · 階段結算</div>
+    <h2>你撐過「${r.phaseName}」了。</h2>
+    <p>恭喜，你沒有在這三回合裡被專案、主管或自己的肝帶走。系統隨機發給你一點成長補償，至少證明受苦不是完全沒有意義。</p>
+    <div class="rewardPoints"><span>本階段獲得 ${r.awarded} 點｜目前可用點數</span><b>${state.skillPoints}</b></div>
+    <div class="rewardGrid">${rows}</div>
+    <button class="primary" style="margin-top:12px" onclick="finishStageReward()">確認配點，進入下一階段 →</button>
+    <p class="note" style="margin-top:8px">剩下的點數不會消失，可以留到後面。健康度最重要，但補一點要花 2 點。</p>
+  </div>`;
+}
 
 function engineerPrologue(){
   const pua = state.edu.tier==="S"
@@ -861,12 +975,13 @@ function engineerPrologue(){
 
 function centerCard(){
   if(state.prologue)return engineerPrologue();
+  if(state.stageReward)return stageRewardCard();
   if(state.ended && state.ending){
     return `<div class="box event endingBox"><div class="endingBadge">CAREER ENDING</div><div class="kicker">工程師人生結局</div><h2>${state.ending.title}</h2><p>${state.ending.text}</p></div>
     <button class="primary" style="border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重新開始工程師人生</button>`;
   }
   if(state.current){
-    return `<div class="box event">${state.current.isSpecial?`<div class="specialWarn">⚠ CONDITIONAL SPECIAL EVENT · 條件式特殊事件</div>`:""}<div class="kicker">${state.current.cat}</div><h2>${state.current.title}</h2><p>${state.current.desc}</p>${eventConditionsHTML(state.current)}</div>
+    return `<div class="box event">${state.current.isSpecial?`<div class="specialWarn">⚠ CONDITIONAL SPECIAL EVENT · 條件式特殊事件</div>`:""}${state.current.eventType?`<div class="eventTypeBadge">${state.current.eventType}</div>`:""}<div class="kicker">${state.current.cat}</div><h2>${state.current.title}</h2><p>${state.current.desc}</p>${eventConditionsHTML(state.current)}</div>
     <div class="box"><div class="boxTitle">你要怎麼做？ <span>CHOICE</span></div>${state.current.choices.map((c,i)=>`<button class="choice" onclick="choose(${i})"><b>${c.label}</b><span>${c.sub}</span><em>${c.risk}${state.current.isSpecial?`｜好結果約 20%`:""}</em></button>`).join("")}</div>`;
   }
   if(state.result){
@@ -874,7 +989,7 @@ function centerCard(){
   }
   return `<div class="box event"><div class="kicker">CURRENT CHAPTER · ${phase().name}</div><h2>${state.turn+1} / ${phase().turns} 回合</h2><p>${phase().desc}</p><p class="note" style="margin-top:9px">條件式特殊事件會根據能力值觸發。健康度是最重要的生存能力；健康過低時，加班、實驗、輪班等事件會變得更危險。</p></div><button class="primary" onclick="drawEvent()">開始本回合事件 →</button>`;
 }
-function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}ensureV2State();app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><div class="profileGrid"><div class="profileAvatar"><img src="${ENGINEER_AVATAR}"></div><div><h1>${state.name}</h1><div class="sub">${state.edu.school} ${state.edu.dept}<br>${state.edu.degree}｜${state.company?.name||"竹科"}｜${state.job?.name||state.jobTitle}</div></div></div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">${state.company?.name||"竹科"}</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.skillPoints}</b><span>特殊事件點數</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V1</span></div><p class="note">V2 已加入條件式特殊事件：特殊事件不會隨機硬塞，而是必須達到對應能力門檻才可能觸發。整體結果約 20% 偏好、80% 偏壞；健康度是最重要的生存能力，過低時可能出現長期住院、被資遣或極端職涯終止結局。成功處理特殊事件可以獲得特殊事件點數。</p></div></aside></div>`}
+function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}ensureV2State();app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><div class="profileGrid"><div class="profileAvatar"><img src="${ENGINEER_AVATAR}"></div><div><h1>${state.name}</h1><div class="sub">${state.edu.school} ${state.edu.dept}<br>${state.edu.degree}｜${state.company?.name||"竹科"}｜${state.job?.name||state.jobTitle}</div></div></div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">${state.company?.name||"竹科"}</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.skillPoints}</b><span>特殊事件點數</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V7</span></div><p class="note">V7：每階段 3 回合。事件會依 RD／製程／IT／QA／AI／FAE／硬體職系分流，也會混入公司政策、高層玄學與辦公室人際瞎事。撐過每個階段會隨機獲得 1～4 點自由配點；健康度最難補，每 +1 需要 2 點。</p></div></aside></div>`}
 render();
 </script>
 
@@ -933,6 +1048,21 @@ window.addEventListener("error",(e)=>{
       </div>`);
   }
 });
+</script>
+
+
+<script id="v8-footer-js">
+function v8Footer(){
+  return `<div class="siteFooter">ENGINEER LIFE · VERSION <b>V8.0</b> · <span class="credit">CREDIT BY RIVER</span></div>`;
+}
+const V8_prevRender=render;
+render=function(){
+  V8_prevRender();
+  const app=document.getElementById("app");
+  if(app && !app.querySelector(".siteFooter")){
+    app.insertAdjacentHTML("beforeend",v8Footer());
+  }
+};
 </script>
 
 </body>
