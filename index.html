@@ -28,6 +28,7 @@ button,input{font:inherit}button{cursor:pointer}#app{min-height:100vh}
 .metric b{display:block;color:var(--yellow);font-size:20px}.metric span{font-size:9px;color:var(--muted)}
 .event h2{font-size:24px;margin:3px 0 10px;color:#fff;line-height:1.3}.event p{color:#b7d7ce;line-height:1.9;margin:0}
 .eventImageWrap{margin:12px 0 14px;border:1px solid #1d4950;background:#041115;border-radius:6px;overflow:hidden}.eventImage{display:block;width:100%;height:auto;image-rendering:pixelated}.eventImageCaption{font-size:10px;color:var(--muted);margin-top:6px}
+.endingImageWrap{margin:12px 0 14px;border:1px solid #253d50;background:#02080d;border-radius:5px;overflow:hidden}.endingImage{display:block;width:100%;max-height:520px;object-fit:cover;image-rendering:pixelated}
 .kicker{font-size:10px;color:var(--cyan);letter-spacing:.12em;font-weight:900}
 .choice{width:100%;text-align:left;background:#07191d;color:#e8fff7;border:1px solid #24545a;border-radius:5px;padding:12px;margin-bottom:8px}.choice:hover{border-color:var(--green)}
 .choice b{display:block;font-size:14px}.choice span{display:block;font-size:11px;color:#8cb7ad;margin-top:4px}.choice em{display:block;font-size:9px;color:var(--yellow);font-style:normal;margin-top:5px}
@@ -1660,7 +1661,7 @@ function nextTurn(){
   }
   save();render();
 }
-function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV21");state=null;render()}}
+function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV24");state=null;window._draftEdu=null;window._draftAvatar=ENGINEER_AVATAR;render();window.scrollTo(0,0)}}
 
 
 function v7PointCost(k){return k==="health"?3:2}
@@ -2051,6 +2052,34 @@ async function shareToInstagram(){
   }
 }
 
+
+const ENDING_IMAGE_MAP={
+  "財富自由，主動離開竹科":"ending-success-wealth.png",
+  "跳出去創業成功":"ending-success-wealth.png",
+  "技術大神，升到傳說級職位":"ending-success-tech.png",
+  "高薪養生工程師":"ending-success-tech.png",
+  "平安退休":"ending-retirement.png",
+  "爆肝累死":"ending-burnout.png",
+  "高薪低命人生":"ending-burnout.png",
+  "壓力崩潰離開科技業":"ending-burnout.png",
+  "夜班通勤事故":"ending-traffic.png",
+  "實驗事故後被資遣":"ending-hospital.png",
+  "住院後遭資遣":"ending-hospital.png",
+  "萬年背鍋後被踢出核心團隊":"ending-politics.png",
+  "政治鬥爭出局":"ending-politics.png",
+  "中年裁員":"ending-politics.png",
+  "技術停滯，被新世代取代":"ending-stagnation.png",
+  "普通地被磨光":"ending-stagnation.png"
+};
+function endingImageSrc(ending){
+  if(!ending)return "";
+  return ENDING_IMAGE_MAP[ending.title]||"ending-stagnation.png";
+}
+function endingImageHTML(ending){
+  const src=endingImageSrc(ending);
+  return src?`<div class="endingImageWrap"><img class="endingImage" src="${src}" alt="結局劇情圖"></div>`:"";
+}
+
 const GOOD_ENDINGS=[
   {
     title:"財富自由，主動離開竹科",
@@ -2159,7 +2188,7 @@ function centerCard(){
     </div>`;
   }
   if(state.ended && state.ending){
-    return `<div class="box event endingBox ${state.ending.good?"endingGood":"endingBad"}"><div class="endingBadge">CAREER ENDING</div><div class="nickBadge">${careerNickname()}</div><div class="kicker">工程師人生結局</div><h2>${state.ending.title}</h2><p>${state.ending.text}</p><div class="endingRate">本遊戲結局設計：約 20% 好結局 / 80% 壞結局</div>${salaryHistoryHTML()}<div class="shareButtons"><button class="primary" onclick="openShareCardModal()">生成分享圖</button><button class="primary" onclick="shareToInstagram()">分享到 IG</button></div></div>
+    return `<div class="box event endingBox ${state.ending.good?"endingGood":"endingBad"}"><div class="endingBadge">CAREER ENDING</div><div class="nickBadge">${careerNickname()}</div><div class="kicker">工程師人生結局</div><h2>${state.ending.title}</h2>${endingImageHTML(state.ending)}<p>${state.ending.text}</p><div class="endingRate">本遊戲結局設計：約 20% 好結局 / 80% 壞結局</div>${salaryHistoryHTML()}<div class="shareButtons"><button class="primary" onclick="openShareCardModal()">生成分享圖</button><button class="primary" onclick="shareToInstagram()">分享到 IG</button></div></div>
     <button class="primary" style="border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重新開始工程師人生</button>`;
   }
   if(state.current){
@@ -2171,7 +2200,7 @@ function centerCard(){
   }
   return `<div class="box event"><div class="kicker">CURRENT CHAPTER · ${phase().name}</div><h2>${state.turn+1} / ${phase().turns} 回合</h2><p>${phase().desc}</p><p class="note" style="margin-top:9px">條件式特殊事件會根據能力值觸發。健康度是最重要的生存能力；健康過低時，加班、實驗、輪班等事件會變得更危險。</p></div><button class="primary" onclick="drawEvent()">開始本回合事件 →</button>`;
 }
-function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}ensureV2State();app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div style="display:flex;align-items:center;gap:8px"><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div><div class="menuWrap"><button class="menuBtn" onclick="openMenu()">☰ 選單</button></div></div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><div class="profileGrid"><div class="profileAvatar"><img src="${state?.avatar||ENGINEER_AVATAR}"></div><div><h1>${state.name}</h1><div class="sub">${state.edu.bachelorSchool} ${state.edu.bachelorDept}<br>碩士：${state.edu.masterSchool} ${state.edu.masterDept}｜${state.company?.name||"竹科"}｜${state.department||"技術部"}｜${state.job?.name||state.jobTitle}</div></div></div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">${state.company?.name||"竹科"}</span><span class="tag">住 ${state.residence?.name||"新竹"}</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.skillPoints}</b><span>特殊事件點數</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V24</span></div><p class="note">V24：角色大頭照改成直接內嵌於 index.html，不再依賴外部 avatar 圖檔，避免 GitHub Pages 路徑造成破圖。5 張特殊事件劇情圖與其他系統全部保留。</p></div></aside></div>`}
+function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}ensureV2State();app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div style="display:flex;align-items:center;gap:8px"><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div><div class="menuWrap"><button class="menuBtn" onclick="openMenu()">☰ 選單</button></div></div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><div class="profileGrid"><div class="profileAvatar"><img src="${state?.avatar||ENGINEER_AVATAR}"></div><div><h1>${state.name}</h1><div class="sub">${state.edu.bachelorSchool} ${state.edu.bachelorDept}<br>碩士：${state.edu.masterSchool} ${state.edu.masterDept}｜${state.company?.name||"竹科"}｜${state.department||"技術部"}｜${state.job?.name||state.jobTitle}</div></div></div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">${state.company?.name||"竹科"}</span><span class="tag">住 ${state.residence?.name||"新竹"}</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.skillPoints}</b><span>特殊事件點數</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V27</span></div><p class="note">V27：修復結局畫面與選單中的「重新開始人生」功能。現在會正確清除目前存檔並回到角色建立首頁；結局圖片、特殊事件圖片與固定大頭照全部保留。</p></div></aside></div>`}
 render();
 </script>
 
