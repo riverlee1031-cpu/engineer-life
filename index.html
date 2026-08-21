@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Engineer Life V1 · 竹科賣肝人生</title>
+<title>Engineer Life V3 · 電腦手機響應式版</title>
 <meta name="theme-color" content="#02070a">
 <style>
 :root{--bg:#02070a;--panel:#061014;--panel2:#08181d;--line:#123b43;--green:#00ffa0;--cyan:#00d9ff;--yellow:#ffd166;--red:#ff5d73;--text:#d9f7ee;--muted:#6f9b92}
@@ -44,6 +44,267 @@ button,input{font:inherit}button{cursor:pointer}#app{min-height:100vh}
 @media(max-width:1050px){.shell{grid-template-columns:minmax(0,1fr) 300px}.left{display:none}}
 @media(max-width:780px){.shell{display:block}.right{border-left:0;border-top:1px solid var(--line)}.center,.right{padding:10px}.setupGrid{grid-template-columns:1fr}.hero h1{font-size:30px}.startStats{grid-template-columns:repeat(2,1fr)}}
 </style>
+
+<style id="v2-special-css">
+.specialWarn{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-bottom:8px;padding:5px 8px;
+  border:1px solid #6f3b45;border-radius:3px;
+  background:#1b0c10;color:#ff8192;
+  font-size:10px;font-weight:900;letter-spacing:.08em
+}
+.conditionList{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:10px
+}
+.conditionTag{
+  border:1px solid #34565b;background:#07181c;
+  color:#8bb6ad;padding:4px 6px;border-radius:3px;font-size:9px
+}
+.conditionTag.hit{border-color:#7c3f48;color:#ff8394;background:#1a0d11}
+.skillPoint{
+  color:#ffd166!important;border-color:#675c2e!important
+}
+.endingBox{
+  border-color:#7d3f48!important;
+  background:linear-gradient(180deg,#210e13,#0b1012)!important
+}
+.endingBox h2{color:#ff8b9a!important}
+.endingBadge{
+  display:inline-block;margin-bottom:10px;padding:5px 8px;
+  border:1px solid #96515d;color:#ff9aaa;background:#281017;font-size:10px;font-weight:900
+}
+</style>
+
+
+<style id="v3-responsive-css">
+:root{
+  --leftW:clamp(210px,16vw,250px);
+  --rightW:clamp(290px,24vw,350px);
+}
+html{width:100%;min-width:0;-webkit-text-size-adjust:100%}
+body{width:100%;max-width:100%;overflow-x:hidden}
+*,*:before,*:after{box-sizing:border-box}
+img,canvas,svg{max-width:100%}
+
+.shell{
+  grid-template-columns:var(--leftW) minmax(0,1fr) var(--rightW)!important;
+  width:100%;
+  max-width:1920px;
+  margin:0 auto;
+}
+.left,.center,.right{min-width:0}
+.center{overflow:hidden}
+.metrics{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+.metric{min-width:0}
+.metric b{font-size:clamp(16px,1.35vw,21px)}
+.event h2{font-size:clamp(21px,1.8vw,27px)}
+.event p,.resultText{font-size:clamp(12px,1vw,14px)}
+.choice b{font-size:clamp(13px,1.05vw,15px)}
+.choice{min-height:58px}
+.primary{min-height:50px}
+.startWrap{width:min(1120px,100%);padding-left:clamp(14px,3vw,28px);padding-right:clamp(14px,3vw,28px)}
+.hero h1{font-size:clamp(31px,4vw,42px)}
+.hero p{font-size:clamp(13px,1.1vw,15px)}
+
+.mobileProfile{display:none}
+.mobileStatsBlock{display:none}
+
+/* laptop */
+@media(max-width:1200px) and (min-width:901px){
+  :root{--leftW:210px;--rightW:300px}
+  .left,.right{padding:11px}
+  .center{padding:14px}
+  .metrics{gap:5px}
+  .metric{padding:8px 3px}
+  .identity h1{font-size:25px}
+}
+
+/* tablet */
+@media(max-width:900px) and (min-width:701px){
+  .shell{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 280px!important;
+  }
+  .left{display:none!important}
+  .center{padding:12px}
+  .right{padding:10px;border-left:1px solid var(--line)}
+  .metrics{grid-template-columns:repeat(3,1fr)!important;gap:6px}
+  .mobileProfile{
+    display:block;
+    margin-bottom:10px
+  }
+  .mobileProfile .box{margin-bottom:8px}
+}
+
+/* phone */
+@media(max-width:700px){
+  body{overflow-x:hidden!important;overflow-y:auto!important}
+  .topbar{
+    position:sticky;
+    top:0;
+    padding:8px 10px;
+    z-index:40;
+  }
+  .logo{font-size:13px}
+  .chip{width:23px;height:23px;font-size:10px}
+  .topmeta{display:none}
+
+  .shell{
+    display:block!important;
+    width:100%!important;
+    min-height:auto!important;
+  }
+  .left{display:none!important}
+  .center{
+    width:100%;
+    padding:8px!important;
+    overflow:visible!important;
+  }
+  .right{
+    width:100%;
+    padding:8px!important;
+    border-left:0!important;
+    border-top:1px solid var(--line);
+    background:rgba(3,12,15,.92);
+  }
+
+  .mobileProfile{
+    display:block!important;
+    margin-bottom:8px;
+  }
+  .mobileProfile .identity{
+    margin-bottom:8px;
+  }
+  .mobileProfile .identity h1{
+    font-size:24px;
+  }
+  .mobileProfile .tagrow{
+    gap:4px;
+  }
+
+  .metrics{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px;
+  }
+  .metric{
+    padding:7px 3px!important;
+    min-height:57px;
+  }
+  .metric b{
+    font-size:16px!important;
+  }
+  .metric span{
+    font-size:8px!important;
+    white-space:nowrap;
+  }
+
+  .box{
+    padding:11px!important;
+    margin-bottom:8px!important;
+    border-radius:5px;
+  }
+  .boxTitle{
+    font-size:10px!important;
+    letter-spacing:.08em;
+  }
+  .event h2{
+    font-size:20px!important;
+    line-height:1.35;
+  }
+  .event p,.resultText{
+    font-size:13px!important;
+    line-height:1.75;
+  }
+  .kicker{font-size:9px}
+  .choice{
+    padding:11px!important;
+    min-height:60px;
+    touch-action:manipulation;
+  }
+  .choice b{font-size:14px!important}
+  .choice span{font-size:11px!important;line-height:1.45}
+  .choice em{font-size:9px!important}
+  .primary{
+    min-height:54px!important;
+    font-size:14px;
+    touch-action:manipulation;
+  }
+  .resultDice{
+    width:62px;height:62px;font-size:28px;
+  }
+  .log{
+    grid-template-columns:78px 1fr!important;
+    gap:7px!important;
+    font-size:10px!important;
+  }
+  .log small{font-size:9px}
+  .conditionList{gap:4px}
+  .conditionTag{font-size:8px;padding:3px 5px}
+  .specialWarn{font-size:9px}
+
+  /* right rail becomes a normal section at the bottom */
+  .right .box:first-child{
+    margin-top:0;
+  }
+  .stat{margin-bottom:8px}
+  .statHead{font-size:10px}
+  .bar{height:6px}
+
+  /* start screen */
+  .startWrap{
+    width:100%;
+    padding:18px 10px 28px!important;
+  }
+  .hero{
+    padding:14px!important;
+    margin-bottom:9px!important;
+  }
+  .hero .ascii{
+    font-size:9px!important;
+  }
+  .hero h1{
+    font-size:27px!important;
+    line-height:1.15;
+  }
+  .hero p{
+    font-size:13px!important;
+    line-height:1.75;
+  }
+  .setupGrid{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .inline{
+    grid-template-columns:1fr!important;
+    gap:6px!important;
+  }
+  .diceBtn{
+    width:100%!important;
+    min-height:44px;
+  }
+  .startStats{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  .startStat{
+    padding:9px!important;
+  }
+  .startStat b{font-size:17px!important}
+  .educationCard b{font-size:14px}
+}
+
+/* very small phones */
+@media(max-width:390px){
+  .center,.right{padding-left:6px!important;padding-right:6px!important}
+  .metrics{gap:4px}
+  .metric{padding:6px 2px!important}
+  .metric b{font-size:15px!important}
+  .metric span{font-size:7.5px!important}
+  .event h2{font-size:18px!important}
+  .event p,.resultText{font-size:12.5px!important}
+  .hero h1{font-size:24px!important}
+}
+</style>
+
 </head>
 <body>
 <div id="app"></div>
@@ -99,13 +360,181 @@ const EVENTS={entry:[
   {label:"負責整理 log",sub:"先做自己能做的",risk:"穩定",fx:[["tech",2],["obedience",3]]},
   {label:"默默坐角落",sub:"等有人分工",risk:"低存在感",fx:[["slack",3],["comm",-2]]}]}
 ]};
+
+const SPECIAL_EVENTS=[
+  {
+    id:"senior_bullying",
+    cat:"⚠ 特殊事件｜職場霸凌",
+    title:"資深學長把整組最髒的工作全丟給你",
+    desc:"他每天在群組點名你、公開酸你，還故意把錯誤往你身上推。這不是普通新人磨合，而是長期累積的職場霸凌。",
+    phaseIds:["entry","rookie2"],
+    trigger:s=>s.obedience>=68 && (s.comm<=58 || s.stress<=62),
+    conditions:[
+      ["奴性 ≥ 68",s=>s.obedience>=68],
+      ["溝通力 ≤ 58 或抗壓 ≤ 62",s=>s.comm<=58 || s.stress<=62]
+    ],
+    choices:[
+      {label:"繼續吞下去",sub:"想說撐過新人期就好",risk:"高風險",fx:[["obedience",4],["stress",-4],["health",-4]],skill:1},
+      {label:"整理紀錄向主管反映",sub:"把聊天記錄與工作分配都留下",risk:"需要溝通力",fx:[["comm",4],["stress",2]],skill:2},
+      {label:"直接跟學長攤牌",sub:"不再讓對方踩線",risk:"高波動",fx:[["obedience",-5],["comm",3],["stress",2]],skill:2}
+    ],
+    good:["主管願意介入調整工作分配，對方之後收斂很多。你也第一次學會：工程師不是只會忍就會有好結果。"],
+    bad:[
+      "學長開始更隱晦地整你，工作氣氛變得很差。你的健康與抗壓都被慢慢磨掉。",
+      "主管只回一句『大家都這樣過來的』。你第一次感受到職場有些問題不是靠努力就能解決。",
+      "事情鬧大後你被貼上『難帶』的標籤，雖然沒被資遣，但考績明顯受影響。"
+    ]
+  },
+  {
+    id:"overtime_faint",
+    cat:"⚠ 特殊事件｜過勞警訊",
+    title:"連續加班後，你在會議室突然暈倒",
+    desc:"你連續幾週睡眠不足，白天靠咖啡撐著。這次站起來報告時眼前一黑，整個人直接倒下。",
+    phaseIds:["entry","rookie2","senior","middle"],
+    trigger:s=>s.health<=48 && s.stress<=68,
+    conditions:[
+      ["健康度 ≤ 48",s=>s.health<=48],
+      ["抗壓性 ≤ 68",s=>s.stress<=68]
+    ],
+    choices:[
+      {label:"請假完整檢查",sub:"先確認身體有沒有問題",risk:"最安全",fx:[["health",6],["obedience",-2]],skill:3},
+      {label:"休息一天就回去",sub:"怕專案沒人接",risk:"高風險",fx:[["health",-3],["obedience",3]],skill:1},
+      {label:"住院觀察幾天",sub:"接受醫師建議",risk:"健康優先",fx:[["health",8],["stress",2]],skill:4}
+    ],
+    good:["你及早做了完整檢查，雖然被醫師警告過勞，但沒有留下嚴重後遺症。這次事件反而讓你真正開始重視健康。"],
+    bad:[
+      "你太快回到工作崗位，身體狀況反覆，接下來幾週都只能低效率撐著。",
+      "住院期間專案被換人接手，主管開始認為你『穩定性不足』，績效受到影響。",
+      "檢查顯示長期過勞已經讓身體出現明顯警訊，之後每次加班都變成更大的風險。"
+    ]
+  },
+  {
+    id:"rdpc_lab_accident",
+    cat:"⚠ 特殊事件｜實驗事故",
+    title:"RDPC 實驗出意外，你被送進醫院",
+    desc:"在實驗室趕驗證時，設備異常造成事故。你第一時間被送醫，專案卻沒有因此停下來。",
+    phaseIds:["rookie2","senior","middle"],
+    trigger:s=>s.tech<=62 && s.health<=58,
+    conditions:[
+      ["技術力 ≤ 62",s=>s.tech<=62],
+      ["健康度 ≤ 58",s=>s.health<=58]
+    ],
+    choices:[
+      {label:"照流程停機回報",sub:"先保人再保專案",risk:"低風險",fx:[["tech",4],["health",3]],skill:4},
+      {label:"先把實驗做完",sub:"不想拖累進度",risk:"極高風險",fx:[["obedience",4],["health",-6]],skill:1},
+      {label:"要求安全調查",sub:"留下正式事故紀錄",risk:"可能得罪主管",fx:[["comm",4],["stress",3]],skill:3}
+    ],
+    good:["事故被正式處理，設備與流程也被修正。你雖然住院幾天，但成功避免同樣的事再次發生。"],
+    bad:[
+      "你住院休養了好一陣子，回公司後發現原本位置已經被別人接走。",
+      "公司把事故定調成個人操作問題。你恢復後被調離核心工作，後續甚至收到資遣通知。",
+      "事故讓你的健康度大幅下滑，雖然還能工作，但職涯從此被迫換一條路。"
+    ],
+    possibleEnding:"lab_injury"
+  },
+  {
+    id:"night_shift_crash",
+    cat:"⚠ 特殊事件｜夜班通勤",
+    title:"小夜班下班，你騎車回家時幾乎睜不開眼",
+    desc:"連續幾天輪班後，你凌晨騎車離開公司。路很空，但你的反應速度也慢到不正常。",
+    phaseIds:["entry","rookie2","senior"],
+    trigger:s=>s.health<=42 && s.stress<=60,
+    conditions:[
+      ["健康度 ≤ 42",s=>s.health<=42],
+      ["抗壓性 ≤ 60",s=>s.stress<=60]
+    ],
+    choices:[
+      {label:"叫車回家",sub:"車明天再牽",risk:"最安全",fx:[["health",4],["luck",1]],skill:3},
+      {label:"喝咖啡硬騎",sub:"覺得只有十幾分鐘",risk:"極高風險",fx:[["obedience",2],["health",-5]],skill:0},
+      {label:"在公司睡一下",sub:"醒來再走",risk:"健康優先",fx:[["health",5],["stress",1]],skill:3}
+    ],
+    good:["你沒有硬撐，安全回到家。隔天醒來才發現，昨晚自己的狀態其實比想像中危險得多。"],
+    bad:[
+      "你在路上發生交通事故，雖然保住性命，但需要長時間住院與復健。",
+      "事故造成嚴重傷勢，你的科技業職涯被迫中斷。",
+      "你在通勤事故中死亡。你的工程師人生在最普通的一次下班路上戛然而止。"
+    ],
+    possibleEnding:"traffic_fatal"
+  },
+  {
+    id:"panic_breakdown",
+    cat:"⚠ 特殊事件｜壓力崩潰",
+    title:"客戶會議前，你突然完全無法集中注意力",
+    desc:"信箱、群組、issue、電話同時跳出來。你坐在位置上，第一次覺得腦袋像完全當機。",
+    phaseIds:["rookie2","senior","middle","late"],
+    trigger:s=>s.stress<=44,
+    conditions:[["抗壓性 ≤ 44",s=>s.stress<=44]],
+    choices:[
+      {label:"請假休息",sub:"承認自己需要停一下",risk:"健康優先",fx:[["stress",6],["health",3]],skill:3},
+      {label:"硬著頭皮開會",sub:"不想讓主管知道",risk:"高風險",fx:[["obedience",3],["stress",-5]],skill:1},
+      {label:"找同事代打",sub:"用人際關係救火",risk:"看溝通力",fx:[["comm",4],["stress",3]],skill:2}
+    ],
+    good:["你成功把工作先放下，狀態慢慢恢復。這次你學會比 debug 更難的一件事：承認自己需要休息。"],
+    bad:[
+      "會議中你完全失常，之後整組開始懷疑你是否還能扛核心專案。",
+      "壓力反覆爆發，你開始頻繁請假，主管把你從重要案子移除。",
+      "你最後選擇長期休養，收入與職涯進度都受到明顯影響。"
+    ]
+  }
+];
+
+function specialTriggerCandidates(){
+  if(!state || state.ended)return [];
+  return SPECIAL_EVENTS.filter(e=>{
+    if(!e.phaseIds.includes(phase().id))return false;
+    if(state.usedSpecial?.includes(e.id))return false;
+    try{return !!e.trigger(state.stats)}catch(_){return false}
+  });
+}
+function eventConditionsHTML(ev){
+  if(!ev?.conditions)return "";
+  return `<div class="conditionList">${ev.conditions.map(([label,fn])=>{
+    let hit=false;try{hit=!!fn(state.stats)}catch(_){}
+    return `<span class="conditionTag ${hit?"hit":""}">${label}</span>`;
+  }).join("")}</div>`;
+}
+function ensureV2State(){
+  if(!state)return;
+  if(state.skillPoints===undefined)state.skillPoints=0;
+  if(state.ended===undefined)state.ended=false;
+  if(!Array.isArray(state.usedSpecial))state.usedSpecial=[];
+}
+function applySkillPoints(n){
+  state.skillPoints=(state.skillPoints||0)+n;
+}
+function maybeTriggerEnding(ev,roll){
+  // Extreme endings only happen on already-triggered high-risk special events.
+  if(!ev?.possibleEnding || roll>2)return false;
+  if(ev.possibleEnding==="lab_injury"){
+    if(state.stats.health<=28 && roll===1){
+      state.ended=true;
+      state.ending={
+        title:"住院後遭資遣",
+        text:"實驗事故造成長期住院。等你恢復到可以回公司時，職位早已被重整，最後收到資遣通知。你的竹科生涯在一場實驗事故後提前結束。"
+      };
+      return true;
+    }
+  }
+  if(ev.possibleEnding==="traffic_fatal"){
+    if(state.stats.health<=25 && roll===1){
+      state.ended=true;
+      state.ending={
+        title:"夜班通勤事故",
+        text:"長期輪班與睡眠不足讓你的反應力降到危險程度。這一次通勤事故沒有等到第二次機會，你的工程師人生就此結束。"
+      };
+      return true;
+    }
+  }
+  return false;
+}
+
 let state=null;
 function clamp(n){return Math.max(0,Math.min(100,n))}
 function rand(a){return a[Math.floor(Math.random()*a.length)]}
 function deep(o){return JSON.parse(JSON.stringify(o))}
 function ovr(s){return Math.round((s.tech*1.35+s.stress+s.health*.8+s.comm*.75+s.obedience*.55+s.slack*.35+s.luck*.5)/6.3)}
-function save(){localStorage.setItem("engineerLifeV1",JSON.stringify(state))}
-function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV1")||"null")}catch(e){return null}}
+function save(){localStorage.setItem("engineerLifeV2",JSON.stringify(state))}
+function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV2")||"null")}catch(e){return null}}
 function specialNameData(name){return NAMES.easter.find(x=>x.name===name)}
 function randomName(){return Math.random()<.18?rand(NAMES.easter).name:rand(NAMES.normal)}
 function randomEdu(){return deep(rand(EDUCATION))}
@@ -118,17 +547,135 @@ function startScreen(){let edu=randomEdu(),name=randomName();window._draftEdu=ed
 ╚══════════════════════════════════════╝</div><h1>從畢業那天開始，人生正式進入 debug 模式。</h1><p>你花了好幾年念完大學和碩士，以為終於能用專業換一份體面的生活。直到第一天踏進竹科，你才發現真正的必修課叫做：加班、救火、主管訊息、績效、跳槽、股票、健康檢查，以及如何在凌晨兩點還能假裝自己很有精神。</p><p>這不是一條保證升主管、年薪三百萬的人生。你有可能一路進大廠、被獵頭挖角，也可能專案翻車、健康爆掉、被主管陰、轉職失敗，最後提早離開科技業。每四回合，你的人生就會走進下一個重要階段。</p></div><div class="setupGrid"><div class="box"><div class="boxTitle">[1] 角色建立 <span>NAME / EDU</span></div><div class="field"><label>工程師姓名</label><div class="inline"><input id="nameInput" value="${name}"><button class="diceBtn" onclick="rerollName()">🎲 骰名字</button></div></div><div class="field"><label>學歷</label><div id="eduCard">${eduCard(edu)}</div></div><button class="diceBtn" style="width:100%;min-height:42px" onclick="rerollEdu()">🎲 重新骰學歷</button><p class="note">隨機姓名有小機率出現特殊諧音人物，會自帶隱藏能力加成。學歷會直接影響初始能力值；台清交成通常技術／抗壓較高，私立學校則需要靠後續職涯慢慢補強。</p></div><div class="box"><div class="boxTitle">[2] 初始能力預覽 <span>BASE STATS</span></div><div id="previewStats">${previewStats(edu,name)}</div><button class="primary" style="margin-top:14px" onclick="startGame()">ENTER 竹科人生 →</button></div></div></div>`}
 function rerollName(){const n=randomName();window._draftName=n;document.getElementById("nameInput").value=n;document.getElementById("previewStats").innerHTML=previewStats(window._draftEdu,n)}
 function rerollEdu(){const e=randomEdu();window._draftEdu=e;document.getElementById("eduCard").innerHTML=eduCard(e);document.getElementById("previewStats").innerHTML=previewStats(e,document.getElementById("nameInput").value.trim()||window._draftName)}
-function startGame(){const name=document.getElementById("nameInput").value.trim()||randomName();const edu=window._draftEdu||randomEdu();let stats=deep(edu.base);const b=applyNameBonus(name,stats);state={name,edu,stats,phase:0,turn:0,year:2026,age:24,salary:68000,jobTitle:"竹科新人",current:null,result:null,logs:[{when:"2026・24歲",text:`${edu.school} ${edu.dept} ${edu.degree}畢業，進入竹科。${b.note}`}],used:[]};save();render()}
+function startGame(){const name=document.getElementById("nameInput").value.trim()||randomName();const edu=window._draftEdu||randomEdu();let stats=deep(edu.base);const b=applyNameBonus(name,stats);state={name,edu,stats,phase:0,turn:0,year:2026,age:24,salary:68000,jobTitle:"竹科新人",skillPoints:0,ended:false,ending:null,current:null,result:null,logs:[{when:"2026・24歲",text:`${edu.school} ${edu.dept} ${edu.degree}畢業，進入竹科。${b.note}`}],used:[]};save();render()}
 function phase(){return PHASES[state.phase]}
 function timeline(){return PHASES.map((p,i)=>`<div class="node ${i<state.phase?"done":i===state.phase?"current":""}"><i class="dot"></i><div><b>${p.year}｜${p.name}</b><br><span>${p.story}</span></div></div>`).join("")}
 function statBlock(){return Object.keys(state.stats).map(k=>`<div class="stat"><div class="statHead"><span>${statLabel(k)}</span><b>${state.stats[k]}</b></div><div class="bar"><i style="width:${state.stats[k]}%"></i></div></div>`).join("")}
-function drawEvent(){if(state.current||state.result)return;let pool=EVENTS[phase().id]||EVENTS.entry;let candidates=pool.filter(e=>!state.used.includes(e.title));if(!candidates.length){state.used=[];candidates=pool}const ev=deep(rand(candidates));state.used.push(ev.title);state.current=ev;save();render()}
-function choose(i){const ch=state.current.choices[i];const roll=1+Math.floor(Math.random()*6);const deltas=[];ch.fx.forEach(([k,v])=>{state.stats[k]=clamp(state.stats[k]+v);deltas.push(`${statLabel(k)} ${v>=0?"+":""}${v}`)});if(roll===6){state.stats.luck=clamp(state.stats.luck+2);deltas.push("運氣 +2")}if(roll===1){state.stats.health=clamp(state.stats.health-2);deltas.push("健康度 -2")}const txt=roll>=5?"結果比預期順利，至少這次你沒有成為群組裡被 tag 的那個人。":roll<=2?"事情往不太妙的方向發展，你開始理解『職場經驗』通常就是踩雷後留下來的東西。":"沒有奇蹟，也沒有爆炸。你把這一回合撐過去了。";state.result={roll,title:state.current.title,text:txt,deltas};state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`${state.current.title}｜${ch.label}｜骰到 ${roll}`});state.current=null;save();render()}
+function drawEvent(){
+  if(state.current||state.result||state.ended)return;
+  ensureV2State();
+  const specials=specialTriggerCandidates();
+
+  if(specials.length){
+    const healthCritical=specials.filter(e=>e.conditions?.some(([label])=>label.includes("健康度")));
+    const pool=healthCritical.length?healthCritical:specials;
+    if(Math.random()<0.72){
+      const ev=deep(rand(pool));
+      state.usedSpecial.push(ev.id);
+      ev.isSpecial=true;
+      state.current=ev;
+      save();render();return;
+    }
+  }
+
+  let pool=EVENTS[phase().id]||EVENTS.entry;
+  let candidates=pool.filter(e=>!state.used.includes(e.title));
+  if(!candidates.length){state.used=[];candidates=pool}
+  const ev=deep(rand(candidates));
+  state.used.push(ev.title);
+  state.current=ev;
+  save();render();
+}
+function choose(i){
+  const ev=state.current;
+  const ch=ev.choices[i];
+  const roll=1+Math.floor(Math.random()*6);
+  const deltas=[];
+
+  ch.fx.forEach(([k,v])=>{
+    state.stats[k]=clamp(state.stats[k]+v);
+    deltas.push(`${statLabel(k)} ${v>=0?"+":""}${v}`);
+  });
+
+  let tier="bad";
+  if(ev.isSpecial){
+    let goodChance=.20;
+    goodChance += Math.max(0,(state.stats.health-70))*0.0025;
+    goodChance += Math.max(0,(state.stats.stress-70))*0.0015;
+    goodChance += Math.max(0,(state.stats.luck-70))*0.001;
+    goodChance=Math.min(.38,goodChance);
+    tier=Math.random()<goodChance?"good":"bad";
+  }else{
+    tier=roll>=5?"good":roll<=2?"bad":"mid";
+  }
+
+  if(roll===6){
+    state.stats.luck=clamp(state.stats.luck+2);
+    deltas.push("運氣 +2");
+  }
+  if(roll===1){
+    state.stats.health=clamp(state.stats.health-2);
+    deltas.push("健康度 -2");
+  }
+
+  if(ev.isSpecial && ch.skill){
+    applySkillPoints(ch.skill);
+    deltas.push(`特殊事件點數 +${ch.skill}`);
+  }
+
+  let txt;
+  if(ev.isSpecial){
+    txt=tier==="good"?rand(ev.good):rand(ev.bad);
+  }else{
+    txt=roll>=5?"結果比預期順利，至少這次你沒有成為群組裡被 tag 的那個人。":
+        roll<=2?"事情往不太妙的方向發展，你開始理解『職場經驗』通常就是踩雷後留下來的東西。":
+        "沒有奇蹟，也沒有爆炸。你把這一回合撐過去了。";
+  }
+
+  const ended=ev.isSpecial?maybeTriggerEnding(ev,roll):false;
+  state.result={roll,title:ev.title,text:txt,deltas,isSpecial:!!ev.isSpecial,tier,ended};
+  state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`${ev.title}｜${ch.label}｜骰到 ${roll}`});
+  state.current=null;
+  save();render();
+}
 function nextTurn(){state.result=null;state.turn++;if(state.turn>=phase().turns){state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`完成 ${phase().name} 四回合，進入重大劇情：${phase().story}`});if(state.phase<PHASES.length-1){state.phase++;state.turn=0;state.year=phase().year;state.age=phase().age;state.salary+=12000;state.jobTitle=phase().name;state.used=[]}else{state.turn=phase().turns}}save();render()}
-function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV1");state=null;render()}}
-function centerCard(){if(state.current){return `<div class="box event"><div class="kicker">${state.current.cat}</div><h2>${state.current.title}</h2><p>${state.current.desc}</p></div><div class="box"><div class="boxTitle">你要怎麼做？ <span>CHOICE</span></div>${state.current.choices.map((c,i)=>`<button class="choice" onclick="choose(${i})"><b>${c.label}</b><span>${c.sub}</span><em>${c.risk}</em></button>`).join("")}</div>`}if(state.result){return `<div class="box"><div class="boxTitle">命運骰結果 <span>RESULT</span></div><div class="resultDice">${state.result.roll}</div><div class="resultText">${state.result.text}</div><div class="deltaRow">${state.result.deltas.map(x=>`<span class="delta ${x.includes("+")?"good":"bad"}">${x}</span>`).join("")}</div><button class="primary" style="margin-top:12px" onclick="nextTurn()">繼續下一回合 →</button></div>`}return `<div class="box event"><div class="kicker">CURRENT CHAPTER · ${phase().name}</div><h2>${state.turn+1} / ${phase().turns} 回合</h2><p>${phase().desc}</p></div><button class="primary" onclick="drawEvent()">開始本回合事件 →</button>`}
-function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><h1>${state.name}</h1><div class="sub">${state.edu.school} ${state.edu.dept}<br>${state.edu.degree}｜${state.edu.tier} 級學歷</div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">竹科</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V1</span></div><p class="note">目前是基本模板：已可骰姓名、骰學歷、套用特殊諧音角色加成、進入竹科事件、每四回合推進人生階段。後續可以再加入公司選擇、年薪、股票、升遷、跳槽、裁員、戀愛、買房、健康檢查、轉管理、創業與退休結局。</p></div></aside></div>`}
+function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV2");state=null;render()}}
+function centerCard(){
+  if(state.ended && state.ending){
+    return `<div class="box event endingBox"><div class="endingBadge">CAREER ENDING</div><div class="kicker">工程師人生結局</div><h2>${state.ending.title}</h2><p>${state.ending.text}</p></div>
+    <button class="primary" style="border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重新開始工程師人生</button>`;
+  }
+  if(state.current){
+    return `<div class="box event">${state.current.isSpecial?`<div class="specialWarn">⚠ CONDITIONAL SPECIAL EVENT · 條件式特殊事件</div>`:""}<div class="kicker">${state.current.cat}</div><h2>${state.current.title}</h2><p>${state.current.desc}</p>${eventConditionsHTML(state.current)}</div>
+    <div class="box"><div class="boxTitle">你要怎麼做？ <span>CHOICE</span></div>${state.current.choices.map((c,i)=>`<button class="choice" onclick="choose(${i})"><b>${c.label}</b><span>${c.sub}</span><em>${c.risk}${state.current.isSpecial?`｜好結果約 20%`:""}</em></button>`).join("")}</div>`;
+  }
+  if(state.result){
+    return `<div class="box ${state.result.ended?"endingBox":""}"><div class="boxTitle">${state.result.isSpecial?"特殊事件結果":"命運骰結果"} <span>RESULT</span></div><div class="resultDice">${state.result.roll}</div><div class="resultText">${state.result.text}</div><div class="deltaRow">${state.result.deltas.map(x=>`<span class="delta ${x.includes("特殊事件點數")?"skillPoint":x.includes("+")?"good":"bad"}">${x}</span>`).join("")}</div>${state.result.ended?"":`<button class="primary" style="margin-top:12px" onclick="nextTurn()">繼續下一回合 →</button>`}</div>`;
+  }
+  return `<div class="box event"><div class="kicker">CURRENT CHAPTER · ${phase().name}</div><h2>${state.turn+1} / ${phase().turns} 回合</h2><p>${phase().desc}</p><p class="note" style="margin-top:9px">條件式特殊事件會根據能力值觸發。健康度是最重要的生存能力；健康過低時，加班、實驗、輪班等事件會變得更危險。</p></div><button class="primary" onclick="drawEvent()">開始本回合事件 →</button>`;
+}
+function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}ensureV2State();app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><h1>${state.name}</h1><div class="sub">${state.edu.school} ${state.edu.dept}<br>${state.edu.degree}｜${state.edu.tier} 級學歷</div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">竹科</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.skillPoints}</b><span>特殊事件點數</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V1</span></div><p class="note">V2 已加入條件式特殊事件：特殊事件不會隨機硬塞，而是必須達到對應能力門檻才可能觸發。整體結果約 20% 偏好、80% 偏壞；健康度是最重要的生存能力，過低時可能出現長期住院、被資遣或極端職涯終止結局。成功處理特殊事件可以獲得特殊事件點數。</p></div></aside></div>`}
 render();
 </script>
+
+<script id="v3-responsive-js">
+function v3MobileProfile(){
+  if(!state)return "";
+  return `<div class="mobileProfile">
+    <div class="box identity">
+      <div class="boxTitle">USER PROFILE <span>${state.edu.tier} 級學歷</span></div>
+      <h1>${state.name}</h1>
+      <div class="sub">${state.edu.school} ${state.edu.dept}<br>${state.edu.degree}｜${state.jobTitle}</div>
+      <div class="tagrow">
+        <span class="tag gold">${state.jobTitle}</span>
+        <span class="tag">竹科</span>
+        <span class="tag">月薪 ${state.salary.toLocaleString()}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+const V3_prevRender=render;
+render=function(){
+  V3_prevRender();
+  if(!state)return;
+
+  const center=document.querySelector(".center");
+  if(center && !center.querySelector(".mobileProfile")){
+    center.insertAdjacentHTML("afterbegin",v3MobileProfile());
+  }
+};
+</script>
+
 </body>
 </html>
