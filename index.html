@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Engineer Life V1 · 竹科賣肝人生</title>
+<meta name="theme-color" content="#02070a">
+<style>
+:root{--bg:#02070a;--panel:#061014;--panel2:#08181d;--line:#123b43;--green:#00ffa0;--cyan:#00d9ff;--yellow:#ffd166;--red:#ff5d73;--text:#d9f7ee;--muted:#6f9b92}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Courier New",monospace;min-height:100%}
+body{background:linear-gradient(rgba(0,255,160,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,217,255,.02) 1px,transparent 1px),var(--bg);background-size:24px 24px}
+button,input{font:inherit}button{cursor:pointer}#app{min-height:100vh}
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);background:rgba(2,7,10,.96)}
+.logo{display:flex;align-items:center;gap:9px;font-weight:1000;color:var(--green);letter-spacing:.08em}
+.chip{width:26px;height:26px;border:2px solid var(--green);display:grid;place-items:center;color:var(--cyan);font-size:12px}
+.topmeta{font-size:11px;color:var(--muted)}
+.shell{display:grid;grid-template-columns:240px minmax(0,1fr) 330px;min-height:calc(100vh - 49px)}
+.left,.right{padding:14px;background:rgba(3,12,15,.86)}.left{border-right:1px solid var(--line)}.right{border-left:1px solid var(--line)}.center{padding:18px;min-width:0}
+.box{border:1px solid var(--line);background:linear-gradient(180deg,rgba(8,24,29,.96),rgba(4,14,18,.96));border-radius:6px;padding:14px;margin-bottom:12px}
+.boxTitle{display:flex;justify-content:space-between;gap:10px;color:var(--green);font-weight:1000;font-size:12px;letter-spacing:.12em;margin-bottom:10px}.boxTitle span{color:var(--muted);font-weight:700}
+.identity h1{font-size:30px;margin:4px 0 8px;color:#fff}.identity .sub{font-size:12px;line-height:1.7;color:#98c5b8}
+.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.tag{border:1px solid var(--line);color:#a8cfc4;border-radius:3px;padding:4px 6px;font-size:10px}.tag.gold{border-color:#695b2b;color:var(--yellow)}
+.stat{margin-bottom:10px}.statHead{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}.statHead b{color:var(--yellow)}
+.bar{height:7px;background:#102329;border-radius:99px;overflow:hidden}.bar i{height:100%;display:block;background:linear-gradient(90deg,var(--green),var(--cyan));width:50%}
+.timeline .node{display:flex;gap:10px;padding:8px 0;color:#63867f;font-size:11px}.timeline .dot{width:9px;height:9px;border:1px solid #31534c;border-radius:50%;margin-top:2px;flex:none}
+.timeline .done,.timeline .current{color:#d6eee7}.timeline .done .dot{background:#2a7560;border-color:#2a7560}.timeline .current .dot{background:var(--yellow);border-color:var(--yellow);box-shadow:0 0 8px rgba(255,209,102,.5)}
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.metric{border:1px solid var(--line);background:#07161a;padding:10px;border-radius:5px;text-align:center}
+.metric b{display:block;color:var(--yellow);font-size:20px}.metric span{font-size:9px;color:var(--muted)}
+.event h2{font-size:24px;margin:3px 0 10px;color:#fff;line-height:1.3}.event p{color:#b7d7ce;line-height:1.9;margin:0}
+.kicker{font-size:10px;color:var(--cyan);letter-spacing:.12em;font-weight:900}
+.choice{width:100%;text-align:left;background:#07191d;color:#e8fff7;border:1px solid #24545a;border-radius:5px;padding:12px;margin-bottom:8px}.choice:hover{border-color:var(--green)}
+.choice b{display:block;font-size:14px}.choice span{display:block;font-size:11px;color:#8cb7ad;margin-top:4px}.choice em{display:block;font-size:9px;color:var(--yellow);font-style:normal;margin-top:5px}
+.primary{width:100%;min-height:48px;border:1px solid var(--green);background:#0b2a22;color:var(--green);font-weight:1000;border-radius:5px}
+.log{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed #14343a;font-size:11px}.log small{color:#5e8e84}.log div{color:#b9d7cf}
+.startWrap{max-width:1100px;margin:0 auto;padding:34px 18px 50px}.hero{border:1px solid var(--line);padding:22px;background:rgba(4,16,20,.94);margin-bottom:14px}
+.hero .ascii{white-space:pre;overflow:auto;color:var(--green);font-size:12px;line-height:1.05}.hero h1{font-size:38px;margin:12px 0 8px;color:#fff}.hero p{line-height:1.9;color:#afcdc5;max-width:900px}
+.setupGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin-bottom:12px}.field label{display:block;font-size:10px;color:var(--cyan);margin-bottom:6px}
+.field input{width:100%;background:#02090c;color:#ecfff8;border:1px solid #23505a;border-radius:4px;padding:10px}.inline{display:grid;grid-template-columns:1fr auto;gap:8px}
+.diceBtn{min-width:110px;border:1px solid var(--yellow);background:#211c0d;color:var(--yellow);border-radius:4px;font-weight:900}
+.educationCard{border:1px solid #27515b;background:#06161b;padding:12px;border-radius:5px}.educationCard b{display:block;color:#fff;font-size:16px}.educationCard span{display:block;color:#7fa49c;font-size:11px;margin-top:4px;line-height:1.6}.bonus{margin-top:8px;color:var(--yellow)!important}
+.startStats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.startStat{border:1px solid #1a4449;background:#051316;padding:10px}.startStat b{display:block;color:var(--green);font-size:18px}.startStat span{font-size:9px;color:var(--muted)}
+.resultDice{width:70px;height:70px;border:2px solid var(--yellow);display:grid;place-items:center;color:var(--yellow);font-size:34px;font-weight:1000;margin:10px auto}.resultText{line-height:1.85;color:#d0e8e1;font-size:12px}
+.deltaRow{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.delta{border:1px solid #2d5a50;border-radius:3px;padding:4px 6px;font-size:9px;color:#b7d5cc}.delta.good{color:var(--green)}.delta.bad{color:var(--red)}.note{font-size:10px;color:#668b82;line-height:1.7}
+@media(max-width:1050px){.shell{grid-template-columns:minmax(0,1fr) 300px}.left{display:none}}
+@media(max-width:780px){.shell{display:block}.right{border-left:0;border-top:1px solid var(--line)}.center,.right{padding:10px}.setupGrid{grid-template-columns:1fr}.hero h1{font-size:30px}.startStats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const NAMES={
+ normal:["陳柏宇","林冠廷","李承翰","吳家豪","張哲維","王俊凱","黃子維","劉宇辰","蔡宗翰","許家銘","鄭宇翔","楊凱翔"],
+ easter:[
+  {name:"黃人醺",bonus:{tech:10,luck:8},note:"GPU 狂人：技術力＋10、運氣＋8"},
+  {name:"張中牟",bonus:{stress:10,tech:7},note:"晶圓教父：抗壓＋10、技術力＋7"},
+  {name:"王鱈宏",bonus:{comm:9,luck:6},note:"市場嗅覺：溝通力＋9、運氣＋6"},
+  {name:"郭苔銘",bonus:{obedience:10,stress:5},note:"軍令如山：奴性＋10、抗壓＋5"},
+  {name:"施振絨",bonus:{tech:6,slack:7},note:"創業腦：技術力＋6、摸魚力＋7"}
+ ]
+};
+const EDUCATION=[
+ {school:"台大",dept:"電機工程",degree:"碩士",tier:"S",base:{health:68,obedience:48,stress:72,tech:82,comm:58,slack:48,luck:60}},
+ {school:"清大",dept:"電機工程",degree:"碩士",tier:"S",base:{health:70,obedience:52,stress:76,tech:80,comm:55,slack:46,luck:58}},
+ {school:"陽明交大",dept:"電子研究所",degree:"碩士",tier:"S",base:{health:67,obedience:55,stress:78,tech:84,comm:52,slack:44,luck:60}},
+ {school:"成大",dept:"電機工程",degree:"碩士",tier:"A",base:{health:72,obedience:58,stress:74,tech:76,comm:60,slack:50,luck:57}},
+ {school:"中央",dept:"電機工程",degree:"碩士",tier:"A",base:{health:73,obedience:58,stress:71,tech:72,comm:58,slack:52,luck:55}},
+ {school:"中山",dept:"電機工程",degree:"碩士",tier:"A",base:{health:74,obedience:56,stress:70,tech:70,comm:61,slack:53,luck:55}},
+ {school:"中興",dept:"電機工程",degree:"碩士",tier:"B",base:{health:75,obedience:62,stress:67,tech:66,comm:60,slack:55,luck:54}},
+ {school:"台科大",dept:"電子工程",degree:"碩士",tier:"A",base:{health:72,obedience:60,stress:73,tech:74,comm:56,slack:50,luck:56}},
+ {school:"北科大",dept:"電子工程",degree:"碩士",tier:"B",base:{health:74,obedience:64,stress:70,tech:68,comm:58,slack:54,luck:54}},
+ {school:"淡江",dept:"電機工程",degree:"學士",tier:"C",base:{health:78,obedience:68,stress:61,tech:56,comm:64,slack:63,luck:52}},
+ {school:"逢甲",dept:"電子工程",degree:"學士",tier:"C",base:{health:79,obedience:69,stress:62,tech:58,comm:63,slack:62,luck:53}},
+ {school:"元智",dept:"電機工程",degree:"碩士",tier:"B",base:{health:76,obedience:65,stress:66,tech:63,comm:61,slack:58,luck:55}},
+ {school:"輔大",dept:"資工系",degree:"學士",tier:"C",base:{health:80,obedience:67,stress:60,tech:55,comm:67,slack:65,luck:54}},
+ {school:"文化",dept:"資工系",degree:"學士",tier:"D",base:{health:82,obedience:72,stress:57,tech:48,comm:66,slack:69,luck:51}}
+];
+const PHASES=[
+ {id:"entry",year:2026,age:24,name:"竹科新人",desc:"碩士畢業，正式踏進竹科。你以為人生要起飛，主管先丟給你一份 Excel。",turns:4,story:"試用期考核"},
+ {id:"rookie2",year:2027,age:25,name:"爆肝工程師",desc:"開始熟悉流程，也開始發現『下班』只是一個概念。",turns:4,story:"年度績效"},
+ {id:"senior",year:2029,age:27,name:"資深工程師",desc:"你會 debug 別人的 code，也開始被要求帶新人。",turns:4,story:"升遷或跳槽"},
+ {id:"middle",year:2032,age:30,name:"中生代工程師",desc:"薪水變高，肝也變貴。你開始想：要繼續技術線，還是轉管理？",turns:4,story:"職涯分岔"},
+ {id:"late",year:2037,age:35,name:"科技業老兵",desc:"你已經看過太多專案、主管和 PPT。真正的問題變成：還要撐多久？",turns:4,story:"人生結算"}
+];
+const EVENTS={entry:[
+ {title:"主管晚上 10:47 傳來訊息",cat:"竹科日常｜加班",desc:"訊息只有一句：『這版今天能不能幫我看一下？』你明天早上九點還有會議。",choices:[
+  {label:"立刻開電腦",sub:"先做再說",risk:"奴性＋，健康可能掉",fx:[["obedience",5],["stress",2],["health",-4]]},
+  {label:"回覆明早處理",sub:"保留睡眠",risk:"健康＋，主管觀感未知",fx:[["health",3],["obedience",-2],["stress",-1]]},
+  {label:"已讀不回",sub:"賭主管忘記",risk:"高風險",fx:[["slack",5],["luck",2],["comm",-2]]}]},
+ {title:"第一份 spec 完全看不懂",cat:"新人事件｜技術",desc:"文件裡每個縮寫都像密碼。學長只說：『以前的 code 看一下就懂了。』",choices:[
+  {label:"熬夜硬啃",sub:"從 code 反推規格",risk:"技術＋，健康－",fx:[["tech",5],["health",-3],["stress",2]]},
+  {label:"整理問題去問學長",sub:"用溝通換效率",risk:"穩定",fx:[["tech",3],["comm",3]]},
+  {label:"先複製舊版本",sub:"能動再說",risk:"摸魚＋，運氣決定命運",fx:[["slack",4],["luck",2],["tech",-1]]}]},
+ {title:"午餐桌上開始比學歷",cat:"竹科文化｜學歷",desc:"有人聊台清交成、有人聊教授、有人聊論文。你突然發現這裡連吃便當都像在面試。",choices:[
+  {label:"加入戰局",sub:"把自己的履歷也搬出來",risk:"溝通／名氣",fx:[["comm",4],["stress",1]]},
+  {label:"安靜吃飯",sub:"不要參戰",risk:"抗壓＋",fx:[["stress",3],["comm",-1]]},
+  {label:"轉移話題聊股票",sub:"看看誰先破防",risk:"摸魚＋",fx:[["slack",4],["comm",2]]}]},
+ {title:"週五下午突然被拉進 war room",cat:"竹科日常｜救火",desc:"一個客戶 issue 把整組叫進會議室，白板寫滿箭頭。有人說今晚可能不能走。",choices:[
+  {label:"主動接核心問題",sub:"新人也想證明自己",risk:"高回報",fx:[["tech",5],["stress",4],["health",-4]]},
+  {label:"負責整理 log",sub:"先做自己能做的",risk:"穩定",fx:[["tech",2],["obedience",3]]},
+  {label:"默默坐角落",sub:"等有人分工",risk:"低存在感",fx:[["slack",3],["comm",-2]]}]}
+]};
+let state=null;
+function clamp(n){return Math.max(0,Math.min(100,n))}
+function rand(a){return a[Math.floor(Math.random()*a.length)]}
+function deep(o){return JSON.parse(JSON.stringify(o))}
+function ovr(s){return Math.round((s.tech*1.35+s.stress+s.health*.8+s.comm*.75+s.obedience*.55+s.slack*.35+s.luck*.5)/6.3)}
+function save(){localStorage.setItem("engineerLifeV1",JSON.stringify(state))}
+function load(){try{return JSON.parse(localStorage.getItem("engineerLifeV1")||"null")}catch(e){return null}}
+function specialNameData(name){return NAMES.easter.find(x=>x.name===name)}
+function randomName(){return Math.random()<.18?rand(NAMES.easter).name:rand(NAMES.normal)}
+function randomEdu(){return deep(rand(EDUCATION))}
+function applyNameBonus(name,stats){const d=specialNameData(name);if(!d)return {stats,note:"一般工程師：沒有隱藏加成"};Object.entries(d.bonus).forEach(([k,v])=>stats[k]=clamp(stats[k]+v));return {stats,note:d.note}}
+function statLabel(k){return ({health:"健康度",obedience:"奴性",stress:"抗壓性",tech:"技術力",comm:"溝通力",slack:"摸魚力",luck:"運氣"})[k]}
+function eduCard(e){return `<div class="educationCard"><b>${e.school} ${e.dept}・${e.degree}</b><span>學歷等級 ${e.tier}｜初始技術 ${e.base.tech}｜抗壓 ${e.base.stress}</span><span class="bonus">${e.tier==="S"?"名校光環：技術／抗壓明顯加成":e.tier==="A"?"研究所實戰派：能力均衡":e.tier==="B"?"中段起跑：靠職場表現翻身":e.tier==="C"?"普通起跑：後續成長更重要":"低起點模式：真正的 hard mode"}</span></div>`}
+function previewStats(e,name){let stats=deep(e.base);let b=applyNameBonus(name,stats);return `<div class="startStats">${Object.keys(stats).map(k=>`<div class="startStat"><b>${stats[k]}</b><span>${statLabel(k)}</span></div>`).join("")}</div><p class="note" style="margin-top:10px;color:var(--yellow)">${b.note}</p>`}
+function startScreen(){let edu=randomEdu(),name=randomName();window._draftEdu=edu;window._draftName=name;return `<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · 竹科賣肝人生</div></div><div class="startWrap"><div class="hero"><div class="ascii">╔══════════════════════════════════════╗
+║ Engineer Life · 新竹科學園區人生模擬器 ║
+╚══════════════════════════════════════╝</div><h1>從畢業那天開始，人生正式進入 debug 模式。</h1><p>你花了好幾年念完大學和碩士，以為終於能用專業換一份體面的生活。直到第一天踏進竹科，你才發現真正的必修課叫做：加班、救火、主管訊息、績效、跳槽、股票、健康檢查，以及如何在凌晨兩點還能假裝自己很有精神。</p><p>這不是一條保證升主管、年薪三百萬的人生。你有可能一路進大廠、被獵頭挖角，也可能專案翻車、健康爆掉、被主管陰、轉職失敗，最後提早離開科技業。每四回合，你的人生就會走進下一個重要階段。</p></div><div class="setupGrid"><div class="box"><div class="boxTitle">[1] 角色建立 <span>NAME / EDU</span></div><div class="field"><label>工程師姓名</label><div class="inline"><input id="nameInput" value="${name}"><button class="diceBtn" onclick="rerollName()">🎲 骰名字</button></div></div><div class="field"><label>學歷</label><div id="eduCard">${eduCard(edu)}</div></div><button class="diceBtn" style="width:100%;min-height:42px" onclick="rerollEdu()">🎲 重新骰學歷</button><p class="note">隨機姓名有小機率出現特殊諧音人物，會自帶隱藏能力加成。學歷會直接影響初始能力值；台清交成通常技術／抗壓較高，私立學校則需要靠後續職涯慢慢補強。</p></div><div class="box"><div class="boxTitle">[2] 初始能力預覽 <span>BASE STATS</span></div><div id="previewStats">${previewStats(edu,name)}</div><button class="primary" style="margin-top:14px" onclick="startGame()">ENTER 竹科人生 →</button></div></div></div>`}
+function rerollName(){const n=randomName();window._draftName=n;document.getElementById("nameInput").value=n;document.getElementById("previewStats").innerHTML=previewStats(window._draftEdu,n)}
+function rerollEdu(){const e=randomEdu();window._draftEdu=e;document.getElementById("eduCard").innerHTML=eduCard(e);document.getElementById("previewStats").innerHTML=previewStats(e,document.getElementById("nameInput").value.trim()||window._draftName)}
+function startGame(){const name=document.getElementById("nameInput").value.trim()||randomName();const edu=window._draftEdu||randomEdu();let stats=deep(edu.base);const b=applyNameBonus(name,stats);state={name,edu,stats,phase:0,turn:0,year:2026,age:24,salary:68000,jobTitle:"竹科新人",current:null,result:null,logs:[{when:"2026・24歲",text:`${edu.school} ${edu.dept} ${edu.degree}畢業，進入竹科。${b.note}`}],used:[]};save();render()}
+function phase(){return PHASES[state.phase]}
+function timeline(){return PHASES.map((p,i)=>`<div class="node ${i<state.phase?"done":i===state.phase?"current":""}"><i class="dot"></i><div><b>${p.year}｜${p.name}</b><br><span>${p.story}</span></div></div>`).join("")}
+function statBlock(){return Object.keys(state.stats).map(k=>`<div class="stat"><div class="statHead"><span>${statLabel(k)}</span><b>${state.stats[k]}</b></div><div class="bar"><i style="width:${state.stats[k]}%"></i></div></div>`).join("")}
+function drawEvent(){if(state.current||state.result)return;let pool=EVENTS[phase().id]||EVENTS.entry;let candidates=pool.filter(e=>!state.used.includes(e.title));if(!candidates.length){state.used=[];candidates=pool}const ev=deep(rand(candidates));state.used.push(ev.title);state.current=ev;save();render()}
+function choose(i){const ch=state.current.choices[i];const roll=1+Math.floor(Math.random()*6);const deltas=[];ch.fx.forEach(([k,v])=>{state.stats[k]=clamp(state.stats[k]+v);deltas.push(`${statLabel(k)} ${v>=0?"+":""}${v}`)});if(roll===6){state.stats.luck=clamp(state.stats.luck+2);deltas.push("運氣 +2")}if(roll===1){state.stats.health=clamp(state.stats.health-2);deltas.push("健康度 -2")}const txt=roll>=5?"結果比預期順利，至少這次你沒有成為群組裡被 tag 的那個人。":roll<=2?"事情往不太妙的方向發展，你開始理解『職場經驗』通常就是踩雷後留下來的東西。":"沒有奇蹟，也沒有爆炸。你把這一回合撐過去了。";state.result={roll,title:state.current.title,text:txt,deltas};state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`${state.current.title}｜${ch.label}｜骰到 ${roll}`});state.current=null;save();render()}
+function nextTurn(){state.result=null;state.turn++;if(state.turn>=phase().turns){state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`完成 ${phase().name} 四回合，進入重大劇情：${phase().story}`});if(state.phase<PHASES.length-1){state.phase++;state.turn=0;state.year=phase().year;state.age=phase().age;state.salary+=12000;state.jobTitle=phase().name;state.used=[]}else{state.turn=phase().turns}}save();render()}
+function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV1");state=null;render()}}
+function centerCard(){if(state.current){return `<div class="box event"><div class="kicker">${state.current.cat}</div><h2>${state.current.title}</h2><p>${state.current.desc}</p></div><div class="box"><div class="boxTitle">你要怎麼做？ <span>CHOICE</span></div>${state.current.choices.map((c,i)=>`<button class="choice" onclick="choose(${i})"><b>${c.label}</b><span>${c.sub}</span><em>${c.risk}</em></button>`).join("")}</div>`}if(state.result){return `<div class="box"><div class="boxTitle">命運骰結果 <span>RESULT</span></div><div class="resultDice">${state.result.roll}</div><div class="resultText">${state.result.text}</div><div class="deltaRow">${state.result.deltas.map(x=>`<span class="delta ${x.includes("+")?"good":"bad"}">${x}</span>`).join("")}</div><button class="primary" style="margin-top:12px" onclick="nextTurn()">繼續下一回合 →</button></div>`}return `<div class="box event"><div class="kicker">CURRENT CHAPTER · ${phase().name}</div><h2>${state.turn+1} / ${phase().turns} 回合</h2><p>${phase().desc}</p></div><button class="primary" onclick="drawEvent()">開始本回合事件 →</button>`}
+function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><h1>${state.name}</h1><div class="sub">${state.edu.school} ${state.edu.dept}<br>${state.edu.degree}｜${state.edu.tier} 級學歷</div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">竹科</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V1</span></div><p class="note">目前是基本模板：已可骰姓名、骰學歷、套用特殊諧音角色加成、進入竹科事件、每四回合推進人生階段。後續可以再加入公司選擇、年薪、股票、升遷、跳槽、裁員、戀愛、買房、健康檢查、轉管理、創業與退休結局。</p></div></aside></div>`}
+render();
+</script>
+</body>
+</html>
