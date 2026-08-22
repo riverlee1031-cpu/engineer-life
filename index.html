@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Engineer Life V24 · 大頭照修復版</title>
+<title>Engineer Life V29 · 動態分享圖卡版</title>
 <meta name="theme-color" content="#02070a">
 <style>
 :root{--bg:#02070a;--panel:#061014;--panel2:#08181d;--line:#123b43;--green:#00ffa0;--cyan:#00d9ff;--yellow:#ffd166;--red:#ff5d73;--text:#d9f7ee;--muted:#6f9b92}
@@ -1062,7 +1062,7 @@ function ensureV2State(){
   if(!state)return;
   if(state.skillPoints===undefined)state.skillPoints=0;
   if(state.ended===undefined)state.ended=false;
-  if(!Array.isArray(state.usedSpecial))state.usedSpecial=[];if(!Array.isArray(state.seenEvents))state.seenEvents=[];if(state.stageReward===undefined)state.stageReward=null;if(state.rolling===undefined)state.rolling=null;if(state.hospitalVisits===undefined)state.hospitalVisits=0;if(state.forcedNightShifts===undefined)state.forcedNightShifts=0;if(state.shareCard===undefined)state.shareCard="";if(state.pendingGhostEvent===undefined)state.pendingGhostEvent=false;if(!state.residence)state.residence=randomResidence(state.salary||0);state.avatar=ENGINEER_AVATAR;ensureIncomeState();
+  if(!Array.isArray(state.usedSpecial))state.usedSpecial=[];if(!Array.isArray(state.seenEvents))state.seenEvents=[];if(state.stageReward===undefined)state.stageReward=null;if(state.rolling===undefined)state.rolling=null;if(state.hospitalVisits===undefined)state.hospitalVisits=0;if(state.forcedNightShifts===undefined)state.forcedNightShifts=0;if(state.shareCard===undefined)state.shareCard="";if(state.shareCardVersion===undefined)state.shareCardVersion="";if(state.pendingGhostEvent===undefined)state.pendingGhostEvent=false;if(!state.residence)state.residence=randomResidence(state.salary||0);state.avatar=ENGINEER_AVATAR;ensureIncomeState();
 }
 function applySkillPoints(n){
   state.skillPoints=(state.skillPoints||0)+n;
@@ -1083,6 +1083,7 @@ function maybeTriggerEnding(ev,roll){
   if(ev.possibleEnding==="traffic_fatal"){
     if(state.stats.health<=25 && roll===1){
       state.ended=true;
+      state.shareCard=''; state.shareCardVersion='';
       state.ending={
         title:"夜班通勤事故",
         text:"長期輪班與睡眠不足讓你的反應力降到危險程度。這一次通勤事故沒有等到第二次機會，你的工程師人生就此結束。"
@@ -1338,7 +1339,7 @@ function startGame(){
       text:`${eduFullText(edu)}畢業，進入 ${company.name}｜${department} 擔任 ${job.name}，搬到 ${residence.name}（${residence.area}）。`
     }],
     used:[],usedSpecial:[],seenEvents:[],pendingGhostEvent:false,
-    hospitalVisits:0,forcedNightShifts:0,shareCard:"",
+    hospitalVisits:0,forcedNightShifts:0,shareCard:"",shareCardVersion:"",
     salaryHistory:[{year:2026,salary:salary*14,monthly:salary,reason:"入職"}],
     totalCareerIncome:salary*14
   };
@@ -1661,7 +1662,7 @@ function nextTurn(){
   }
   save();render();
 }
-function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV24");state=null;window._draftEdu=null;window._draftAvatar=ENGINEER_AVATAR;render();window.scrollTo(0,0)}}
+function resetGame(){if(confirm("確定要重開工程師人生？")){localStorage.removeItem("engineerLifeV24");;state=null;window._draftEdu=null;window._draftAvatar=ENGINEER_AVATAR;render();window.scrollTo(0,0)}}
 
 
 function v7PointCost(k){return k==="health"?3:2}
@@ -1926,83 +1927,134 @@ function rarityLabel(){
   return r==='SSR'?'SSR 傳說結局':r==='SR'?'SR 稀有結局':'R 一般結局';
 }
 
+const SHARE_CARD_VERSION="v29-dynamic-card";
+
+function fitText(ctx,text,maxWidth,startSize,weight='bold',family='Arial'){
+  let size=startSize;
+  while(size>14){
+    ctx.font=`${weight} ${size}px ${family}`;
+    if(ctx.measureText(text||'').width<=maxWidth) break;
+    size-=2;
+  }
+  return size;
+}
+function shortText(text,maxChars){
+  const chars=[...(text||'')];
+  return chars.length>maxChars?chars.slice(0,maxChars-1).join('')+'…':chars.join('');
+}
+
 async function generateShareCardDataURL(){
   const canvas=document.createElement('canvas');
-  canvas.width=900; canvas.height=1260;
+  canvas.width=1080; canvas.height=1350;
   const ctx=canvas.getContext('2d');
   const rarity=endingRarity();
-  const accent=rarity==='SSR'?'#f5c34d':rarity==='SR'?'#ff6d2e':'#4ca3ff';
+  const accent=rarity==='SSR'?'#f2c14e':rarity==='SR'?'#ff7a3c':'#58a6ff';
 
-  const grad=ctx.createLinearGradient(0,0,900,1260);
-  grad.addColorStop(0,'#142849'); grad.addColorStop(1,'#071124');
-  ctx.fillStyle=grad; ctx.fillRect(0,0,900,1260);
-  ctx.fillStyle=accent; ctx.fillRect(10,10,880,12);
-  ctx.strokeStyle='rgba(90,119,177,.6)'; ctx.lineWidth=5; ctx.strokeRect(7,7,886,1246);
+  const grad=ctx.createLinearGradient(0,0,0,1350);
+  grad.addColorStop(0,'#0b2148');
+  grad.addColorStop(1,'#051028');
+  ctx.fillStyle=grad;
+  ctx.fillRect(0,0,1080,1350);
 
-  ctx.fillStyle='#f4bf4d'; ctx.font='bold 28px Arial';
-  ctx.fillText('ENGINEER LIFE・生涯工程師卡',42,60);
-  roundedRect(ctx,690,34,160,52,12,'#0b1934',accent);
-  ctx.fillStyle=accent; ctx.font='bold 24px Arial'; ctx.textAlign='center';
-  ctx.fillText(rarityLabel(),770,68); ctx.textAlign='left';
+  ctx.fillStyle=accent; ctx.fillRect(16,16,1048,12);
+  ctx.strokeStyle='#365c96'; ctx.lineWidth=6; ctx.strokeRect(12,12,1056,1326);
+
+  ctx.fillStyle='#f3c24f';
+  ctx.font='bold 34px Arial';
+  ctx.fillText('ENGINEER LIFE · 生涯工程師卡',54,72);
+
+  roundedRect(ctx,860,38,160,54,12,'#0c1a38',accent);
+  ctx.fillStyle=accent;
+  ctx.font='bold 26px Arial';
+  ctx.textAlign='center';
+  ctx.fillText(rarityLabel(),940,72);
+  ctx.textAlign='left';
 
   const avatar=await loadImg(state.avatar||ENGINEER_AVATAR).catch(()=>null);
-  roundedRect(ctx,40,105,150,150,22,'#122749',accent);
+  roundedRect(ctx,54,120,140,140,16,'#0e1e3e','#4a8ee8');
   if(avatar){
     ctx.save();
-    ctx.beginPath();ctx.roundRect?ctx.roundRect(48,113,134,134,16):ctx.rect(48,113,134,134);ctx.clip();
-    ctx.drawImage(avatar,48,113,134,134);ctx.restore();
+    ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(66,132,116,116,12); else ctx.rect(66,132,116,116);
+    ctx.clip();
+    ctx.drawImage(avatar,66,132,116,116);
+    ctx.restore();
   }
-  roundedRect(ctx,205,108,195,42,10,'#101c36','#33578e');
-  ctx.fillStyle='#c7d8f5';ctx.font='bold 18px Arial';ctx.fillText(companyBadge(),223,136);
-  roundedRect(ctx,205,162,195,42,10,'#101c36','#33578e');
-  ctx.fillStyle='#c7d8f5';ctx.fillText((state.company?.name||'科技公司')+'｜'+(state.job?.name||state.jobTitle),223,190);
 
-  ctx.fillStyle=accent;ctx.font='bold 94px Arial';ctx.fillText('#'+String(Math.max(1,(state.age||24)-22)),42,350);
-  ctx.fillStyle='#fff';ctx.font='bold 66px Arial';ctx.fillText(state.name||'工程師',42,430);
-  ctx.fillStyle='#c3d4ef';ctx.font='bold 28px Arial';ctx.fillText(careerNickname()+' ・ '+(state.ending?.title||'工程師人生'),42,478);
+  const title1=companyBadge();
+  const title2=shortText((state.company?.name||'科技公司')+'｜'+(state.department||'技術部')+'｜'+(state.job?.name||state.jobTitle||'工程師'),28);
+  roundedRect(ctx,216,126,230,42,9,'#0f1d3a','#4a8ee8');
+  roundedRect(ctx,216,178,350,42,9,'#0f1d3a','#4a8ee8');
+  ctx.fillStyle='#eaf3ff'; ctx.font='bold 18px Arial'; ctx.fillText(title1,234,153); ctx.fillText(title2,234,205);
+
+  ctx.fillStyle=accent;
+  ctx.font='bold 92px Arial';
+  ctx.fillText('#'+String(Math.max(1,(state.age||24)-22)),54,380);
+
+  let nameSize=fitText(ctx,state.name||'工程師',420,70);
+  ctx.fillStyle='#ffffff';
+  ctx.font=`bold ${nameSize}px Arial`;
+  ctx.fillText(state.name||'工程師',54,460);
+  ctx.fillStyle='#cbd9f1';
+  ctx.font='bold 28px Arial';
+  const cardSub=shortText(careerNickname()+' · '+(state.ending?.title||'工程師人生'),28); const subSize=fitText(ctx,cardSub,500,28); ctx.font=`bold ${subSize}px Arial`; ctx.fillText(cardSub,54,505);
+
+  const endImg=await loadImg(endingImageSrc(state.ending)).catch(()=>null);
+  roundedRect(ctx,595,126,425,365,18,'#0b1830','#3c5f93');
+  if(endImg){
+    ctx.save();
+    ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(610,141,395,335,12); else ctx.rect(610,141,395,335);
+    ctx.clip();
+    ctx.imageSmoothingEnabled=false;
+    ctx.drawImage(endImg,610,141,395,335);
+    ctx.restore();
+  }
 
   const metrics=[
-    ['目前年薪',((state.salary||0)*12).toLocaleString()],
+    ['目前年薪',((state.salary||0)*14).toLocaleString()],
     ['生涯總收入',(state.totalCareerIncome||0).toLocaleString()],
     ['爆肝指數',burnoutIndex()+'%'],
     ['存活率',survivalRate()+'%'],
     ['醫院次數',String(state.hospitalVisits||0)],
     ['事件數',String((state.seenEvents||[]).length)]
   ];
-  const positions=[[42,535],[268,535],[42,665],[268,665],[42,795],[268,795]];
+  const pos=[[54,548],[290,548],[54,678],[290,678],[54,808],[290,808]];
   metrics.forEach((m,i)=>{
-    const [x,y]=positions[i];
-    roundedRect(ctx,x,y,200,106,14,'#0d1c38','#2f4e82');
-    ctx.fillStyle=accent;ctx.font='bold 45px Arial';ctx.fillText(m[1],x+16,y+55);
-    ctx.fillStyle='#afc1df';ctx.font='bold 18px Arial';ctx.fillText(m[0],x+16,y+88);
+    const [x,y]=pos[i];
+    roundedRect(ctx,x,y,200,106,12,'#0b1a34','#4174bc');
+    const valueSize=fitText(ctx,m[1],168,24);
+    ctx.fillStyle='#58a6ff'; ctx.font=`bold ${valueSize}px Arial`; ctx.fillText(m[1],x+16,y+48);
+    ctx.fillStyle='#bed1ef'; ctx.font='bold 18px Arial'; ctx.fillText(m[0],x+16,y+84);
   });
 
-  drawShareRadar(ctx,682,355,145);
+  drawShareRadar(ctx,790,690,118);
+
   const statRows=[['健康',state.stats.health],['奴性',state.stats.obedience],['抗壓',state.stats.stress],['技術',state.stats.tech],['溝通',state.stats.comm],['摸魚',state.stats.slack],['運氣',state.stats.luck]];
-  let sy=560;
+  let sy=862;
   statRows.forEach(([label,val])=>{
-    ctx.fillStyle='#dce7ff';ctx.font='bold 22px Arial';ctx.fillText(label,515,sy);
-    roundedRect(ctx,605,sy-20,190,16,8,'#1d2b49',null);
-    roundedRect(ctx,605,sy-20,Math.max(8,1.9*val),16,8,accent,null);
-    ctx.fillStyle='#fff';ctx.font='bold 20px Arial';ctx.fillText(String(val),810,sy);
-    sy+=46;
+    ctx.fillStyle='#e8f0ff'; ctx.font='bold 22px Arial'; ctx.fillText(label,610,sy);
+    roundedRect(ctx,690,sy-18,210,14,7,'#162846',null);
+    roundedRect(ctx,690,sy-18,Math.max(8,2.1*(val||0)),14,7,accent,null);
+    ctx.fillStyle='#ffffff'; ctx.font='bold 20px Arial'; ctx.fillText(String(val||0),920,sy);
+    sy+=42;
   });
 
-  roundedRect(ctx,42,930,390,210,15,'#0a1830','#2d4e84');
-  ctx.fillStyle='#f1bd4b';ctx.font='bold 28px Arial';ctx.fillText('學歷履歷',64,970);
-  ctx.fillStyle='#dce7ff';ctx.font='bold 21px Arial';
-  multilineByChars(ctx,'大學｜'+(state.edu?.bachelorSchool||'')+' '+(state.edu?.bachelorDept||''),64,1010,18,31,'#dce7ff');
-  multilineByChars(ctx,'碩士｜'+(state.edu?.masterSchool||'')+' '+(state.edu?.masterDept||''),64,1060,18,31,'#dce7ff');
-  ctx.fillStyle=accent;ctx.font='bold 22px Arial';ctx.fillText('學歷等級：'+(state.edu?.tier||''),64,1118);
+  roundedRect(ctx,54,968,456,240,14,'#09162e','#4174bc');
+  ctx.fillStyle='#f2c14e'; ctx.font='bold 28px Arial'; ctx.fillText('學歷履歷',74,1008);
+  ctx.fillStyle='#e3edff'; ctx.font='bold 21px Arial';
+  multilineByChars(ctx,shortText('大學｜'+(state.edu?.bachelorSchool||'')+' '+(state.edu?.bachelorDept||''),24),74,1050,22,30,'#e3edff');
+  multilineByChars(ctx,shortText('碩士｜'+(state.edu?.masterSchool||'')+' '+(state.edu?.masterDept||''),24),74,1100,22,30,'#e3edff');
+  ctx.fillStyle=accent; ctx.font='bold 22px Arial'; ctx.fillText('學歷等級：'+shortText(state.edu?.tier||'',14),74,1170);
 
-  roundedRect(ctx,466,930,386,210,15,'#08152a','#2d4e84');
-  ctx.fillStyle='#f1bd4b';ctx.font='bold 28px Arial';ctx.fillText('人生結局',488,970);
-  ctx.fillStyle='#dce7ff';ctx.font='22px Arial';
-  multilineByChars(ctx,state.ending?.text||'',488,1010,18,31,'#dce7ff');
+  roundedRect(ctx,536,968,484,240,14,'#09162e','#4174bc');
+  ctx.fillStyle='#f2c14e'; ctx.font='bold 28px Arial'; ctx.fillText('人生結局',556,1008);
+  ctx.fillStyle='#e3edff'; ctx.font='22px Arial';
+  multilineByChars(ctx,shortText(state.ending?.text||'',72),556,1050,20,30,'#e3edff');
 
-  roundedRect(ctx,42,1165,810,58,12,'#0c1830','#2d4e84');
-  ctx.fillStyle='#9fb1d0';ctx.font='bold 21px Arial';ctx.fillText('Engineer Life · Credit by RIVER',64,1202);
-  ctx.fillStyle=accent;ctx.textAlign='right';ctx.fillText('頭銜：'+careerNickname(),830,1202);ctx.textAlign='left';
+  roundedRect(ctx,54,1234,966,62,12,'#0c1830','#4174bc');
+  ctx.fillStyle='#adc4e6'; ctx.font='bold 22px Arial'; ctx.fillText('Engineer Life · Credit by RIVER',76,1274); ctx.font='bold 18px Arial'; ctx.fillText('居住地：'+shortText(state.residence?.name||'新竹',12),76,1303);
+  ctx.fillStyle=accent; ctx.textAlign='right'; ctx.fillText('頭銜：'+shortText(careerNickname(),12),994,1274); ctx.textAlign='left';
 
   return canvas.toDataURL('image/png');
 }
@@ -2014,16 +2066,16 @@ async function openShareCardModal(){
   const area=document.getElementById('shareCardArea');
   try{
     const data=await generateShareCardDataURL();
-    state.shareCard=data; save();
+    state.shareCard=data; state.shareCardVersion=SHARE_CARD_VERSION; save();
     area.innerHTML=`<img class="sharePreviewImg" src="${data}" alt="結局分享圖"><div class="shareButtons"><button class="primary" onclick="downloadShareCard()">下載分享圖</button><button class="primary" onclick="shareToInstagram()">分享到 IG</button></div><div class="shareHint">手機上按「分享到 IG」會呼叫系統分享面板；若裝置不支援，請先下載圖片再分享到 Instagram。</div>`;
   }catch(err){
     area.innerHTML=`<div class="loadingShare">分享圖生成失敗，請再試一次。<br><small>${String(err)}</small></div>`;
   }
 }
 async function ensureShareCard(){
-  if(state?.shareCard)return state.shareCard;
+  if(state?.shareCard && state.shareCardVersion===SHARE_CARD_VERSION)return state.shareCard;
   const data=await generateShareCardDataURL();
-  state.shareCard=data; save();
+  state.shareCard=data; state.shareCardVersion=SHARE_CARD_VERSION; save();
   return data;
 }
 async function downloadShareCard(){
@@ -2141,7 +2193,7 @@ function finishCareer(){
   recordAnnualIncome("生涯最終結算");
   const e=chooseEnding();
   state.ended=true;
-  state.ending={title:e.title,text:e.text,nick:e.nick,good:GOOD_ENDINGS.some(x=>x.title===e.title)};
+  state.ending={title:e.title,text:e.text,nick:e.nick,good:GOOD_ENDINGS.some(x=>x.title===e.title)}; state.shareCard=''; state.shareCardVersion='';
   state.current=null;state.result=null;state.stageReward=null;
   state.logs.unshift({when:`${state.year}・${state.age}歲`,text:`生涯結局：${e.title}`});
   save();render();
@@ -2200,7 +2252,7 @@ function centerCard(){
   }
   return `<div class="box event"><div class="kicker">CURRENT CHAPTER · ${phase().name}</div><h2>${state.turn+1} / ${phase().turns} 回合</h2><p>${phase().desc}</p><p class="note" style="margin-top:9px">條件式特殊事件會根據能力值觸發。健康度是最重要的生存能力；健康過低時，加班、實驗、輪班等事件會變得更危險。</p></div><button class="primary" onclick="drawEvent()">開始本回合事件 →</button>`;
 }
-function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}ensureV2State();app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div style="display:flex;align-items:center;gap:8px"><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div><div class="menuWrap"><button class="menuBtn" onclick="openMenu()">☰ 選單</button></div></div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><div class="profileGrid"><div class="profileAvatar"><img src="${state?.avatar||ENGINEER_AVATAR}"></div><div><h1>${state.name}</h1><div class="sub">${state.edu.bachelorSchool} ${state.edu.bachelorDept}<br>碩士：${state.edu.masterSchool} ${state.edu.masterDept}｜${state.company?.name||"竹科"}｜${state.department||"技術部"}｜${state.job?.name||state.jobTitle}</div></div></div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">${state.company?.name||"竹科"}</span><span class="tag">住 ${state.residence?.name||"新竹"}</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.skillPoints}</b><span>特殊事件點數</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V27</span></div><p class="note">V27：修復結局畫面與選單中的「重新開始人生」功能。現在會正確清除目前存檔並回到角色建立首頁；結局圖片、特殊事件圖片與固定大頭照全部保留。</p></div></aside></div>`}
+function render(){const app=document.getElementById("app");if(!state){state=load();if(!state){app.innerHTML=startScreen();return}}ensureV2State();app.innerHTML=`<div class="topbar"><div class="logo"><div class="chip">EL</div>Engineer Life</div><div style="display:flex;align-items:center;gap:8px"><div class="topmeta">PTT/BBS MODE · ${state.year} · ${state.age}歲 · ${state.jobTitle}</div><div class="menuWrap"><button class="menuBtn" onclick="openMenu()">☰ 選單</button></div></div></div><div class="shell"><aside class="left"><div class="box identity"><div class="boxTitle">USER PROFILE <span>#${Math.floor(1000+Math.random()*8999)}</span></div><div class="profileGrid"><div class="profileAvatar"><img src="${state?.avatar||ENGINEER_AVATAR}"></div><div><h1>${state.name}</h1><div class="sub">${state.edu.bachelorSchool} ${state.edu.bachelorDept}<br>碩士：${state.edu.masterSchool} ${state.edu.masterDept}｜${state.company?.name||"竹科"}｜${state.department||"技術部"}｜${state.job?.name||state.jobTitle}</div></div></div><div class="tagrow"><span class="tag gold">${state.jobTitle}</span><span class="tag">${state.company?.name||"竹科"}</span><span class="tag">住 ${state.residence?.name||"新竹"}</span><span class="tag">月薪 ${state.salary.toLocaleString()}</span></div></div><div class="box timeline"><div class="boxTitle">CAREER PATH <span>生涯路線</span></div>${timeline()}</div><button class="primary" onclick="save()">儲存</button><button class="primary" style="margin-top:8px;border-color:var(--red);color:var(--red);background:#201014" onclick="resetGame()">重開人生</button></aside><main class="center"><div class="metrics" style="grid-template-columns:repeat(6,minmax(0,1fr))"><div class="metric"><b>${state.age}</b><span>年齡</span></div><div class="metric"><b>${state.year}</b><span>年份</span></div><div class="metric"><b>${ovr(state.stats)}</b><span>綜合 OVR</span></div><div class="metric"><b>${state.salary.toLocaleString()}</b><span>月薪</span></div><div class="metric"><b>${state.skillPoints}</b><span>特殊事件點數</span></div><div class="metric"><b>${state.turn}/${phase().turns}</b><span>階段回合</span></div></div><div style="height:12px"></div>${centerCard()}<div class="box"><div class="boxTitle">RECENT LOG <span>最近紀錄</span></div>${state.logs.slice(0,7).map(l=>`<div class="log"><small>${l.when}</small><div>${l.text}</div></div>`).join("")}</div></main><aside class="right"><div class="box"><div class="boxTitle">BASIC STATS <span>能力值</span></div>${statBlock()}</div><div class="box"><div class="boxTitle">SYSTEM NOTE <span>V29</span></div><p class="note">V29：分享卡全面改為即時動態生成。每局會依實際姓名、公司、職位、學歷、年薪、生涯收入、7 項能力值、住院與事件紀錄、結局與對應像素插圖生成專屬 PNG；不再使用固定完整圖卡。</p></div></aside></div>`}
 render();
 </script>
 
